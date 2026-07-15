@@ -8,8 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+      rel="stylesheet" />
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
@@ -22,8 +21,7 @@
               d="M2 24 C 14 24, 16 6, 30 6 S 46 24, 56 24 S 72 3, 84 3 S 100 24, 110 24"
               stroke="currentColor"
               stroke-width="2"
-              stroke-linecap="round"
-            />
+              stroke-linecap="round" />
           </svg>
         </div>
         <h1>prosody&#8202;<span class="slash">/</span>&#8202;mask</h1>
@@ -37,110 +35,147 @@
       <div class="layout">
         <main class="layout-main">
           <section class="block">
-        <div class="section-head">
-          <h2>Live specimen</h2>
-          <div class="seg" role="tablist" aria-label="Pitch source">
-            <button id="mode-rules" class="seg-btn is-active" role="tab" aria-selected="true">Rules</button>
-            <button id="mode-ai" class="seg-btn" role="tab" aria-selected="false">AI points</button>
-            <button id="mode-audio" class="seg-btn" role="tab" aria-selected="false">From audio</button>
-          </div>
-        </div>
-        <p class="caption" id="mode-caption"></p>
-        <div class="specimen">
-          <div class="passage" id="demo"></div>
-        </div>
-        <div class="audio" id="audio-player">
-          <button class="audio-btn" id="audio-btn" type="button" aria-label="Play">
-            <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
-            <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z" /></svg>
-          </button>
-          <div class="audio-body">
-            <div class="audio-row">
-              <span class="audio-label">Hear it read aloud</span>
-              <span class="audio-time" id="audio-time">0:00</span>
+            <div class="section-head">
+              <h2>Live specimen</h2>
+              <div class="seg" role="tablist" aria-label="Pitch source">
+                <button id="mode-rules" class="seg-btn is-active" role="tab" aria-selected="true">Rules</button>
+                <button id="mode-ai" class="seg-btn" role="tab" aria-selected="false">AI points</button>
+                <button id="mode-audio" class="seg-btn" role="tab" aria-selected="false">From audio</button>
+              </div>
             </div>
-            <div class="audio-track" id="audio-track"><div class="audio-fill" id="audio-fill"></div></div>
-          </div>
-          <audio id="audio" src="/demo-voice.mp3" preload="metadata"></audio>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="section-head">
-          <h2>Preset</h2>
-          <span class="tag">style only</span>
-        </div>
-        <p class="caption">
-          Pure style - paste it into <code>createMask(el, input, preset)</code>. Pitch points never live here.
-        </p>
-        <div class="preset-grid">
-          <div class="preset-box">
-            <div class="preset-box-head">
-              <span>TypeScript</span>
-              <button id="copy-ts" class="mini">Copy</button>
+            <p class="caption" id="mode-caption"></p>
+            <div class="specimen">
+              <div class="passage" id="demo"></div>
             </div>
-            <pre id="out-ts"></pre>
-          </div>
-          <div class="preset-box">
-            <div class="preset-box-head">
-              <span>JSON</span>
-              <button id="copy-json" class="mini">Copy</button>
-            </div>
-            <pre id="out-json"></pre>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="section-head">
-          <h2>Your text</h2>
-          <div class="lang-field">
-            <span class="lf-label" id="lang-lbl">Language</span>
-            <div class="select" id="lang-select">
-              <button
-                type="button"
-                class="select-trigger"
-                id="lang-trigger"
-                aria-haspopup="listbox"
-                aria-expanded="false"
-                aria-labelledby="lang-lbl lang-label"
-              >
-                <span id="lang-label">English</span>
-                <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+            <div class="audio" id="audio-player">
+              <button class="audio-btn" id="audio-btn" type="button" aria-label="Play">
+                <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+                <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6 5h4v14H6zM14 5h4v14h-4z" />
                 </svg>
               </button>
-              <ul class="select-menu" id="lang-menu" role="listbox" aria-labelledby="lang-lbl">
-                <li class="select-option is-selected" role="option" data-value="en" aria-selected="true">English</li>
-                <li class="select-option" role="option" data-value="es" aria-selected="false">Español</li>
-                <li class="select-option" role="option" data-value="pt" aria-selected="false">Português</li>
-                <li class="select-option" role="option" data-value="ru" aria-selected="false">Русский</li>
-              </ul>
+              <div class="audio-body">
+                <div class="audio-row">
+                  <span class="audio-label">Hear it read aloud</span>
+                  <span class="audio-time" id="audio-time">0:00</span>
+                </div>
+                <div class="audio-track" id="audio-track"><div class="audio-fill" id="audio-fill"></div></div>
+              </div>
+              <audio id="audio" src="/demo-voice.mp3" preload="metadata"></audio>
             </div>
-          </div>
-        </div>
-        <p class="caption">
-          Type anything for live rules-based pitch in the chosen language, or paste your own <code>Token[]</code> to
-          preview measured / AI melody.
-        </p>
-        <textarea id="your-text" rows="2" spellcheck="false"></textarea>
-        <div class="specimen">
-          <div class="passage small" id="yourtext"></div>
-        </div>
+          </section>
 
-        <details class="tokens-details">
-          <summary>Paste external tokens (Token[])</summary>
-          <p class="caption">
-            An array of <code>{ text, pitch: [onset, offset], trailing }</code>. Valid JSON renders below; language is
-            ignored on this path.
-          </p>
-          <textarea id="tokens-json" rows="6" spellcheck="false"></textarea>
-          <p class="err" id="tokens-err"></p>
-          <div class="specimen">
-            <div class="passage small" id="tokenstext"></div>
-          </div>
-        </details>
-      </section>
+          <section class="panel">
+            <div class="section-head">
+              <h2>Preset</h2>
+              <span class="tag">style only</span>
+            </div>
+            <p class="caption">
+              Pure style - paste it into <code>createMask(el, input, preset)</code>. Pitch points never live here.
+            </p>
+            <div class="preset-grid">
+              <div class="preset-box">
+                <div class="preset-box-head">
+                  <span>TypeScript</span>
+                  <button id="copy-ts" class="mini">Copy</button>
+                </div>
+                <pre id="out-ts"></pre>
+              </div>
+              <div class="preset-box">
+                <div class="preset-box-head">
+                  <span>JSON</span>
+                  <button id="copy-json" class="mini">Copy</button>
+                </div>
+                <pre id="out-json"></pre>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="section-head">
+              <h2>Your text</h2>
+              <div class="lang-field">
+                <span class="lf-label" id="lang-lbl">Language</span>
+                <div class="select" id="lang-select">
+                  <button
+                    type="button"
+                    class="select-trigger"
+                    id="lang-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-labelledby="lang-lbl lang-label">
+                    <span id="lang-label">English</span>
+                    <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      <path
+                        d="M4 6l4 4 4-4"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    </svg>
+                  </button>
+                  <ul class="select-menu" id="lang-menu" role="listbox" aria-labelledby="lang-lbl">
+                    <li class="select-option is-selected" role="option" data-value="en" aria-selected="true">
+                      English
+                    </li>
+                    <li class="select-option" role="option" data-value="es" aria-selected="false">Español</li>
+                    <li class="select-option" role="option" data-value="pt" aria-selected="false">Português</li>
+                    <li class="select-option" role="option" data-value="ru" aria-selected="false">Русский</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <p class="caption">
+              Type anything for live rules-based pitch in the chosen language, or paste your own <code>Token[]</code> to
+              preview measured / AI melody.
+            </p>
+            <textarea id="your-text" rows="2" spellcheck="false"></textarea>
+            <div class="specimen">
+              <div class="passage small" id="yourtext"></div>
+            </div>
+
+            <details class="tokens-details">
+              <summary>Paste external tokens (Token[])</summary>
+              <p class="caption">
+                An array of <code>{ text, pitch: [onset, offset], trailing }</code>. Valid JSON renders below; language
+                is ignored on this path.
+              </p>
+              <textarea id="tokens-json" rows="6" spellcheck="false"></textarea>
+              <p class="err" id="tokens-err"></p>
+              <div class="specimen">
+                <div class="passage small" id="tokenstext"></div>
+              </div>
+            </details>
+          </section>
+
+          <section class="panel">
+            <div class="section-head">
+              <h2>Generate points with AI</h2>
+              <span class="tag">prompts</span>
+            </div>
+            <p class="caption">
+              Ready-made prompts - paste one into any AI with your input and it returns a <code>Token[]</code> you drop
+              straight into <code>createMask(el, { tokens })</code>. No prompt to write yourself.
+            </p>
+            <div class="prompt-list">
+              <div class="prompt-box">
+                <div class="prompt-head">
+                  <span class="prompt-title">From text <span class="prompt-sub">the AI authors the melody</span></span>
+                  <button id="copy-prompt-text" class="mini">Copy</button>
+                </div>
+                <pre id="prompt-text"></pre>
+              </div>
+              <div class="prompt-box">
+                <div class="prompt-head">
+                  <span class="prompt-title"
+                    >From audio <span class="prompt-sub">the AI reads measured pitch</span></span
+                  >
+                  <button id="copy-prompt-audio" class="mini">Copy</button>
+                </div>
+                <pre id="prompt-audio"></pre>
+              </div>
+            </div>
+          </section>
         </main>
 
         <aside class="layout-side">

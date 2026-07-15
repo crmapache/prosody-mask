@@ -61,8 +61,6 @@ body {
 }
 .controls-panel {
   margin-bottom: 0;
-  max-height: calc(100vh - 48px);
-  overflow-y: auto;
 }
 
 /* ---------- masthead ---------- */
@@ -623,6 +621,45 @@ pre {
   overflow-x: auto;
 }
 
+/* ---------- AI prompts ---------- */
+
+.prompt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.prompt-box {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--inset);
+  overflow: hidden;
+}
+.prompt-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 10px 10px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.prompt-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.prompt-sub {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--faint);
+  margin-left: 6px;
+}
+.prompt-box pre {
+  max-height: 210px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 /* ---------- textareas ---------- */
 
 textarea {
@@ -727,8 +764,6 @@ footer {
     position: static;
   }
   .controls-panel {
-    max-height: none;
-    overflow: visible;
     margin-bottom: 24px;
   }
   .controls-panel .row {
