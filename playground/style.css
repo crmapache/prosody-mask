@@ -70,6 +70,32 @@ body {
   padding-top: 9px;
 }
 
+/* ---------- topbar ---------- */
+
+.topbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 18px;
+}
+.social-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.social-links a {
+  display: inline-flex;
+  color: var(--faint);
+  transition:
+    color 0.15s,
+    transform 0.1s;
+}
+.social-links a:hover {
+  color: var(--accent-strong);
+}
+.social-links a:active {
+  transform: translateY(1px);
+}
+
 /* ---------- masthead ---------- */
 
 .masthead {
