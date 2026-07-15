@@ -1,5 +1,5 @@
 import { createMask, defaultStyle, type MaskHandle, type MaskInput, type MaskStyle, type Token } from 'prosody-mask'
-import { sampleAiTokens, sampleText, sampleWordTimings } from './sample'
+import { sampleAiTokens, sampleAudioTokens, sampleText, sampleWordTimings } from './sample'
 
 const $ = <T extends HTMLElement>(id: string): T => document.getElementById(id) as T
 
@@ -22,10 +22,18 @@ const NUM_CONTROLS: Array<{ key: keyof MaskStyle; digits: number }> = [
 
 // --- masks ------------------------------------------------------------------
 
-let mode: 'rules' | 'ai' = 'rules'
+type Mode = 'rules' | 'ai' | 'audio'
+const MODES: Mode[] = ['rules', 'ai', 'audio']
+const modeBtn: Record<Mode, string> = { rules: 'mode-rules', ai: 'mode-ai', audio: 'mode-audio' }
+let mode: Mode = 'rules'
 let lang = 'en'
 
-const demoInput = (): MaskInput => (mode === 'ai' ? { tokens: sampleAiTokens } : { text: sampleText, lang: 'en' })
+const demoInput = (): MaskInput =>
+  mode === 'ai'
+    ? { tokens: sampleAiTokens }
+    : mode === 'audio'
+      ? { tokens: sampleAudioTokens }
+      : { text: sampleText, lang: 'en' }
 
 const demoMask: MaskHandle = createMask($('demo'), demoInput(), style)
 const yourMask: MaskHandle = createMask($('yourtext'), { text: '', lang }, style)
@@ -148,23 +156,26 @@ $('reset').addEventListener('click', () => {
 
 // --- wiring: demo mode toggle ----------------------------------------------
 
-const captions: Record<'rules' | 'ai', string> = {
-  rules: 'The package tokenised this passage and computed every pitch point from English intonation rules - a fast, honest approximation.',
-  ai: 'The same passage, but with pitch measured from the audio itself - word timings from Deepgram, F0 per word. This is the melody you actually hear; press play to follow it.',
+const captions: Record<Mode, string> = {
+  rules:
+    'The package tokenised this passage and computed every pitch point from English intonation rules - a fast, honest approximation.',
+  ai: 'Points authored by hand from the text alone - the melody you might place without hearing it. It follows the punctuation, so it misses the pauses the speaker actually makes.',
+  audio:
+    'Pitch measured from the audio itself - word timings from Deepgram, F0 per word, and the real held pauses. This is the melody you actually hear; press play to follow it.',
 }
 
-function setMode(next: 'rules' | 'ai'): void {
+function setMode(next: Mode): void {
   mode = next
-  $('mode-rules').classList.toggle('is-active', next === 'rules')
-  $('mode-ai').classList.toggle('is-active', next === 'ai')
-  $('mode-rules').setAttribute('aria-selected', String(next === 'rules'))
-  $('mode-ai').setAttribute('aria-selected', String(next === 'ai'))
+  for (const m of MODES) {
+    const b = $(modeBtn[m])
+    b.classList.toggle('is-active', m === next)
+    b.setAttribute('aria-selected', String(m === next))
+  }
   $('mode-caption').textContent = captions[next]
   demoMask.update(demoInput())
 }
 
-$('mode-rules').addEventListener('click', () => setMode('rules'))
-$('mode-ai').addEventListener('click', () => setMode('ai'))
+for (const m of MODES) $(modeBtn[m]).addEventListener('click', () => setMode(m))
 
 // --- wiring: your own text --------------------------------------------------
 

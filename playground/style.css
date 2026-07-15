@@ -151,6 +151,11 @@ h2 {
   margin: 0 0 16px;
   max-width: 600px;
 }
+/* Reserve room for the tallest mode caption so the specimen below never jumps
+   when switching tabs. */
+#mode-caption {
+  min-height: 4.8em;
+}
 code {
   font-family: var(--mono);
   font-size: 0.86em;
