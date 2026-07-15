@@ -1,17 +1,36 @@
 # prosody-mask
 
+<p align="center">
+  <a href="https://prosody-mask.vercel.app">
+    <img src="https://raw.githubusercontent.com/crmapache/prosody-mask/main/docs/hero.png" alt="prosody-mask: a translucent intonation overlay tracing the melody of a read-aloud passage, with a play button to hear it read aloud" width="640" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://prosody-mask.vercel.app"><b>Live playground →</b></a>
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/prosody-mask"><img src="https://img.shields.io/npm/v/prosody-mask.svg" alt="npm version" /></a>
+  <a href="https://bundlephobia.com/package/prosody-mask"><img src="https://img.shields.io/bundlephobia/minzip/prosody-mask" alt="minzipped size" /></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/npm/l/prosody-mask.svg" alt="MIT license" /></a>
+</p>
+
 Render a translucent **intonation mask** over ordinary flowing text. Each breath
 group (a run of words between real pauses) becomes one continuous soft fill that
 rises and falls with the speech melody and returns to the floor at every pause -
 a rounded "hill" per breath group. The text stays live, selectable and on top;
 the overlay is purely decorative.
 
-- **Zero runtime dependencies.** Framework-free, SSR-safe import.
+- **Zero runtime dependencies.** Framework-free core, SSR-safe import.
 - **Stable, pixel-free data contract.** Pitch is `0..1`, two points per word.
   Rules, an LLM, or a real pitch tracker all produce the same shape.
 - **Use it either way:** rules out of the box, or bring your own points for
   accuracy.
 - Built-in rules for **English, Spanish, Portuguese and Russian**.
+- **Wrappers** for React, Vue, Svelte, and a `<prosody-mask>` Web Component
+  (which also covers Angular and anything else). Each framework runtime is an
+  _optional_ peer dependency, so you never pull in one you don't use.
 
 > The built-in pitch is an intonation **heuristic**, an approximation, not
 > ground truth. When you need accuracy, produce your own `Token[]` (LLM or pitch
@@ -52,10 +71,10 @@ supply tokens directly. They are used exactly as given:
 import { createMask, type Token } from 'prosody-mask'
 
 const tokens: Token[] = [
-  { text: 'Bring', pitch: [0.30, 0.55], trailing: '' },
-  { text: 'your', pitch: [0.55, 0.50], trailing: '' },
-  { text: 'own', pitch: [0.50, 0.68], trailing: '' },
-  { text: 'points', pitch: [0.74, 0.10], trailing: '.' },
+  { text: 'Bring', pitch: [0.3, 0.55], trailing: '' },
+  { text: 'your', pitch: [0.55, 0.5], trailing: '' },
+  { text: 'own', pitch: [0.5, 0.68], trailing: '' },
+  { text: 'points', pitch: [0.74, 0.1], trailing: '.' },
 ]
 
 createMask(el, { tokens })
@@ -68,6 +87,70 @@ import { computeTokens } from 'prosody-mask'
 
 const tokens = computeTokens('The tide came in slowly.', { lang: 'en' })
 ```
+
+The [playground](https://prosody-mask.vercel.app) has ready-made prompts you can
+paste into any AI to generate `Token[]` from text alone, or from measured word
+timings + an F0 track - no prompt to write yourself.
+
+## Framework wrappers
+
+The core is framework-agnostic; each wrapper is a thin adapter that creates,
+updates and tears down the mask across the host framework's lifecycle. Pick the
+one that matches your stack, or use the core directly in anything else.
+
+### React
+
+```tsx
+import { ProsodyMask } from 'prosody-mask/react'
+
+function Passage() {
+  return <ProsodyMask text="How do you decide between the options?" lang="en" />
+}
+```
+
+### Vue 3
+
+```vue
+<script setup lang="ts">
+import { ProsodyMask } from 'prosody-mask/vue'
+</script>
+
+<template>
+  <ProsodyMask text="How do you decide between the options?" lang="en" />
+</template>
+```
+
+### Svelte (action — no Svelte runtime dependency)
+
+```svelte
+<script lang="ts">
+  import { prosodyMask } from 'prosody-mask/svelte'
+  const options = { text: 'How do you decide between the options?', lang: 'en' }
+</script>
+
+<div use:prosodyMask={options}></div>
+```
+
+### Web Component — `<prosody-mask>` (and Angular)
+
+The universal wrapper. Works in plain HTML and in any framework. `text`/`lang`
+are attributes; `tokens` and `maskStyle` are properties (complex values).
+
+```html
+<script type="module">
+  import 'prosody-mask/web-component'
+</script>
+
+<prosody-mask text="How do you decide between the options?" lang="en"></prosody-mask>
+```
+
+In **Angular**, import the module once and add `CUSTOM_ELEMENTS_SCHEMA` to your
+component/module, then use `<prosody-mask>` in the template as usual (a custom
+element is Angular's officially supported way to use non-Angular UI).
+
+Every wrapper shares the same props: `text`, `lang`, `tokens` (pre-pitched,
+wins over `text`), and `maskStyle` (a `Partial<MaskStyle>`, kept as its own prop
+so it never collides with the host's own `style`/`class`).
 
 ## The pitch contract
 
@@ -114,20 +197,21 @@ import { createMask, defaultStyle } from 'prosody-mask'
 createMask(el, { text }, { ...defaultStyle, color: '#3b6ea5', fillOpacity: 0.2 })
 ```
 
-| Field           | Type   | Default   | Meaning                                                        |
-| --------------- | ------ | --------- | -------------------------------------------------------------- |
-| `color`         | string | `#1C92C4` | Shared colour for fill + both lines (`#rgb` or `#rrggbb`).     |
-| `fillOpacity`   | number | `0.16`    | Fill opacity, `0..1` (`0` hides the fill).                     |
-| `topWidth`      | number | `1.5`     | Top edge line width in px (`0` hides it).                      |
-| `topOpacity`    | number | `0.45`    | Top edge line opacity, `0..1`.                                 |
-| `bottomWidth`   | number | `2.5`     | Baseline width in px (`0` hides it).                           |
-| `bottomOpacity` | number | `0.85`    | Baseline opacity, `0..1`.                                      |
-| `floorLift`     | number | `0.38`    | Minimum fill height so low pitch never collapses to the floor. |
+| Field           | Type   | Default   | Meaning                                                                  |
+| --------------- | ------ | --------- | ------------------------------------------------------------------------ |
+| `color`         | string | `#1C92C4` | Shared colour for fill + both lines (`#rgb` or `#rrggbb`).               |
+| `fillOpacity`   | number | `0.16`    | Fill opacity, `0..1` (`0` hides the fill).                               |
+| `topWidth`      | number | `1.5`     | Top edge line width in px (`0` hides it).                                |
+| `topOpacity`    | number | `0.45`    | Top edge line opacity, `0..1`.                                           |
+| `bottomWidth`   | number | `2.5`     | Baseline width in px (`0` hides it).                                     |
+| `bottomOpacity` | number | `0.85`    | Baseline opacity, `0..1`.                                                |
+| `floorLift`     | number | `0.38`    | Minimum fill height so low pitch never collapses to the floor.           |
 | `softGap`       | number | `2`       | Soft-pause gap (comma / `;` / `:`) in spaces (× the font's space width). |
 | `hardGap`       | number | `4`       | Hard-pause gap (`.` / `?` / `!`) in spaces (× the font's space width).   |
-| `smoothing`     | number | `1`       | Catmull-Rom tension; `1` = reference, `0` = straight lines.    |
+| `smoothing`     | number | `1`       | Catmull-Rom tension; `1` = reference, `0` = straight lines.              |
 
-Tune a look in the [playground](#playground) and copy it as a preset.
+Tune a look in the [playground](https://prosody-mask.vercel.app) and copy it as
+a preset.
 
 ## API
 
@@ -146,7 +230,8 @@ interface MaskHandle {
 
 Also exported: `computeTokens`, `defaultStyle`, `groupTokens`, `pauseAfter`,
 `tokenise`, `classifyPunct`, `smoothTop`, `getProfile`, `supportedLanguages`, and
-all types.
+all types. `prosody-mask/react`, `/vue`, `/svelte` and `/web-component` each
+re-export `defaultStyle` and every type alongside their wrapper.
 
 The renderer recomputes automatically on window resize, container resize
 (`ResizeObserver`) and after `document.fonts.ready`, debounced with
@@ -170,10 +255,11 @@ Copy `src/rules/en.ts`, swap the word tables, and register it in
 
 ## Playground
 
-A standalone Vite page under `playground/` lets you dial in a style, copy it as a
-preset (TypeScript or JSON), type your own text (rules, any supported language),
-and paste external `Token[]` to preview measured/AI melody. It also toggles the
-same passage between rules-computed pitch and hand-authored "AI" points.
+A standalone Vite page under `playground/`, live at
+**[prosody-mask.vercel.app](https://prosody-mask.vercel.app)**, lets you dial in
+a style, copy it as a preset (TypeScript or JSON), and toggle the same passage
+between rules-computed pitch, hand-authored "AI" points, and pitch measured from
+real audio. It also ships copy-paste AI prompts for generating your own tokens.
 
 ```sh
 npm run dev              # playground dev server
@@ -190,6 +276,7 @@ npm run build      # bundle ESM + CJS + .d.ts (tsup)
 npm test           # unit tests (vitest)
 npm run typecheck  # tsc --noEmit
 npm run lint       # eslint
+npm run format     # prettier --write
 ```
 
 ## License
