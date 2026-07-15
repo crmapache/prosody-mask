@@ -31,6 +31,28 @@ const demoMask: MaskHandle = createMask($('demo'), demoInput(), style)
 const yourMask: MaskHandle = createMask($('yourtext'), { text: '', lang }, style)
 let tokensMask: MaskHandle | null = null
 
+// Text size is a host property, not part of the mask style, so it lives outside
+// the preset. It scales the reading specimens; the masks re-measure on redraw.
+const DEFAULT_SIZE = 24
+let textSize = DEFAULT_SIZE
+
+function applyTextSize(): void {
+  ;($('demo') as HTMLElement).style.fontSize = `${textSize}px`
+  const small = `${Math.round(textSize * 0.84)}px`
+  ;($('yourtext') as HTMLElement).style.fontSize = small
+  ;($('tokenstext') as HTMLElement).style.fontSize = small
+  demoMask.redraw()
+  yourMask.redraw()
+  tokensMask?.redraw()
+}
+
+function syncTextSize(): void {
+  const el = $('c-fontSize') as HTMLInputElement
+  el.value = String(textSize)
+  $('v-fontSize').textContent = String(textSize)
+  setFill(el)
+}
+
 // --- style <-> controls -----------------------------------------------------
 
 /** Paint the filled portion of a range slider (webkit reads `--fill`). */
@@ -107,10 +129,21 @@ for (const { key, digits } of NUM_CONTROLS) {
   })
 }
 
+const sizeInput = $('c-fontSize') as HTMLInputElement
+sizeInput.addEventListener('input', () => {
+  textSize = Number(sizeInput.value)
+  $('v-fontSize').textContent = String(textSize)
+  setFill(sizeInput)
+  applyTextSize()
+})
+
 $('reset').addEventListener('click', () => {
   Object.assign(style, defaultStyle)
+  textSize = DEFAULT_SIZE
   syncControls()
+  syncTextSize()
   applyStyle()
+  applyTextSize()
 })
 
 // --- wiring: demo mode toggle ----------------------------------------------
@@ -293,10 +326,12 @@ tokensEl.addEventListener('input', updateTokens)
 // --- init -------------------------------------------------------------------
 
 syncControls()
+syncTextSize()
 renderPresets()
 setMode('rules')
 updateYourText()
 updateTokens()
+applyTextSize()
 wireCopy('copy-ts', () => tsSnippet(style))
 wireCopy('copy-json', () => JSON.stringify(orderedStyle(style), null, 2))
 
