@@ -6,6 +6,14 @@ import type { BreathGroup, MaskHandle, MaskInput, MaskStyle, Token } from './typ
 
 const SVG_NS = 'http://www.w3.org/2000/svg'
 
+/**
+ * A breath group whose final offset sits above this holds its edge up at that
+ * pitch (a rising yes/no question or a list-item continuation) instead of
+ * closing down to the floor. Falling endings (statements, wh-questions) sit
+ * well below it and still return to the floor as a rounded hill.
+ */
+const RISE_HOLD = 0.6
+
 function hexToRgb(hex: string): [number, number, number] {
   let h = hex.replace('#', '')
   if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2]
@@ -164,8 +172,13 @@ export function createMask(container: HTMLElement, input: MaskInput, style?: Par
       const yAt = (pitch: number): number => floor - bandH * (st.floorLift + (1 - st.floorLift) * clamp01(pitch))
 
       // Build the top edge. Two points per word (onset, offset) placed inside
-      // the word box so the melody can slope across it; anchor to the floor at
-      // real breath-group ends only (interior wrap edges keep their pitch).
+      // the word box so the melody can slope across it. A breath-group edge
+      // returns to the floor to close the hill - EXCEPT when the group ends on a
+      // rise (a yes/no question or a list-item continuation): a rising voice
+      // stays up, so we hold the edge at its final pitch instead of forcing a
+      // plunge to the floor. Interior wrap edges always keep their pitch.
+      const lastOffset = items[items.length - 1].w.offset
+      const endsHigh = lastOffset > RISE_HOLD
       const pts: Pt[] = []
       pts.push({ x: leftX, y: startsBand ? floor : yAt(items[0].w.onset) })
       for (const o of items) {
@@ -175,7 +188,7 @@ export function createMask(container: HTMLElement, input: MaskInput, style?: Par
         pts.push({ x: L + 0.25 * w, y: yAt(o.w.onset) })
         pts.push({ x: R - 0.25 * w, y: yAt(o.w.offset) })
       }
-      pts.push({ x: rightX, y: endsBand ? floor : yAt(items[items.length - 1].w.offset) })
+      pts.push({ x: rightX, y: endsBand && !endsHigh ? floor : yAt(lastOffset) })
 
       const topD = smoothTop(pts, st.smoothing)
       const fillD = `${topD} L ${rightX.toFixed(1)} ${floor.toFixed(1)} L ${leftX.toFixed(1)} ${floor.toFixed(1)} Z`
