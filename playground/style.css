@@ -183,6 +183,20 @@ code {
   line-height: 1.85;
 }
 
+/* karaoke highlight: the word currently spoken in the audio */
+#demo span {
+  border-radius: 5px;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease,
+    box-shadow 0.12s ease;
+}
+#demo span.speaking {
+  background: rgba(14, 163, 148, 0.18);
+  color: var(--accent-strong);
+  box-shadow: 0 0 0 3px rgba(14, 163, 148, 0.18);
+}
+
 /* ---------- audio player ---------- */
 
 .audio {
@@ -247,12 +261,6 @@ code {
   font-size: 13px;
   color: var(--ink);
   font-weight: 500;
-}
-.audio-sub {
-  font-size: 11px;
-  color: var(--faint);
-  font-weight: 400;
-  margin-left: 6px;
 }
 .audio-time {
   font-family: var(--mono);

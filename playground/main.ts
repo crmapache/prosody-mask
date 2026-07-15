@@ -1,5 +1,5 @@
 import { createMask, defaultStyle, type MaskHandle, type MaskInput, type MaskStyle, type Token } from 'prosody-mask'
-import { sampleAiTokens, sampleText } from './sample'
+import { sampleAiTokens, sampleText, sampleWordTimings } from './sample'
 
 const $ = <T extends HTMLElement>(id: string): T => document.getElementById(id) as T
 
@@ -150,7 +150,7 @@ $('reset').addEventListener('click', () => {
 
 const captions: Record<'rules' | 'ai', string> = {
   rules: 'The package tokenised this passage and computed every pitch point from English intonation rules - a fast, honest approximation.',
-  ai: 'The same passage, but drawn from hand-authored points (standing in for an LLM or pitch tracker). Notice the livelier melody and the clearer rise into "water?".',
+  ai: 'The same passage, but with pitch measured from the audio itself - word timings from Deepgram, F0 per word. This is the melody you actually hear; press play to follow it.',
 }
 
 function setMode(next: 'rules' | 'ai'): void {
@@ -352,6 +352,30 @@ function initAudio(): void {
     return `${m}:${String(sec).padStart(2, '0')}`
   }
 
+  // Karaoke highlight: light up the demo word currently spoken. Query the mask's
+  // word spans fresh each frame (they are rebuilt on a mode toggle) and skip the
+  // aria-hidden gap spans; order matches sampleWordTimings by index.
+  const demoEl = $('demo')
+  const wordSpans = (): HTMLElement[] =>
+    Array.from(demoEl.querySelectorAll<HTMLElement>('span')).filter((s) => s.getAttribute('aria-hidden') !== 'true')
+  let hiRaf = 0
+  const clearHighlight = (): void => {
+    for (const s of wordSpans()) s.classList.remove('speaking')
+  }
+  const highlightLoop = (): void => {
+    const t = audio.currentTime
+    let idx = -1
+    for (let i = 0; i < sampleWordTimings.length; i++) {
+      if (t >= sampleWordTimings[i].start && t < sampleWordTimings[i].end) {
+        idx = i
+        break
+      }
+    }
+    const spans = wordSpans()
+    spans.forEach((s, i) => s.classList.toggle('speaking', i === idx))
+    if (!audio.paused && !audio.ended) hiRaf = requestAnimationFrame(highlightLoop)
+  }
+
   btn.addEventListener('click', () => {
     if (audio.paused) void audio.play()
     else audio.pause()
@@ -359,10 +383,14 @@ function initAudio(): void {
   audio.addEventListener('play', () => {
     wrap.classList.add('is-playing')
     btn.setAttribute('aria-label', 'Pause')
+    cancelAnimationFrame(hiRaf)
+    hiRaf = requestAnimationFrame(highlightLoop)
   })
   audio.addEventListener('pause', () => {
     wrap.classList.remove('is-playing')
     btn.setAttribute('aria-label', 'Play')
+    cancelAnimationFrame(hiRaf)
+    clearHighlight()
   })
   audio.addEventListener('loadedmetadata', () => {
     time.textContent = fmt(audio.duration)
@@ -375,6 +403,8 @@ function initAudio(): void {
   audio.addEventListener('ended', () => {
     fill.style.width = '0%'
     time.textContent = fmt(audio.duration)
+    cancelAnimationFrame(hiRaf)
+    clearHighlight()
   })
   track.addEventListener('click', (e) => {
     const rect = track.getBoundingClientRect()
