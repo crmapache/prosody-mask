@@ -14,7 +14,7 @@ const P = {
   functionDip: 0.14, // function words sit this much lower than content words
   contRise: 0.86, // continuation / list-item high ending
   fallLow: 0.12, // statement / wh-question resolution (fall to low)
-  yesNoRise: 0.93, // yes/no question resolution (rise to high)
+  yesNoRise: 1, // yes/no question resolution: rise all the way to the ceiling
   min: 0.05,
   max: 1,
 }
