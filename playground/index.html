@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>prosody-mask - playground</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <h1>prosody-mask</h1>
+        <p class="sub">
+          A translucent intonation mask that lives inside the text's own height: it grows from the floor to the letter
+          tops and returns to the floor at every real pause. Tune the look below and copy it as a preset. The melody
+          (pitch points) is a separate flow - the preset never freezes it.
+        </p>
+      </header>
+
+      <section class="demo-block">
+        <div class="demo-head">
+          <h2>Demo passage</h2>
+          <div class="seg" role="tablist" aria-label="Pitch source">
+            <button id="mode-rules" class="seg-btn is-active" role="tab" aria-selected="true">By rules</button>
+            <button id="mode-ai" class="seg-btn" role="tab" aria-selected="false">With AI points</button>
+          </div>
+        </div>
+        <p class="caption" id="mode-caption"></p>
+        <div class="passage" id="demo"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Style constructor</h2>
+
+        <div class="row">
+          <label for="c-color">Colour (shared)</label>
+          <span class="spacer"></span>
+          <input type="color" id="c-color" value="#C6851C" />
+        </div>
+        <div class="divider"></div>
+
+        <div class="row">
+          <label for="c-fillOpacity">Fill opacity</label>
+          <input type="range" id="c-fillOpacity" min="0" max="1" step="0.02" />
+          <span class="val" id="v-fillOpacity"></span>
+        </div>
+        <div class="divider"></div>
+
+        <div class="row">
+          <label for="c-topWidth">Top line width</label>
+          <input type="range" id="c-topWidth" min="0" max="8" step="0.5" />
+          <span class="val" id="v-topWidth"></span>
+        </div>
+        <div class="row">
+          <label for="c-topOpacity">— opacity</label>
+          <input type="range" id="c-topOpacity" min="0" max="1" step="0.05" />
+          <span class="val" id="v-topOpacity"></span>
+        </div>
+        <div class="divider"></div>
+
+        <div class="row">
+          <label for="c-bottomWidth">Baseline width</label>
+          <input type="range" id="c-bottomWidth" min="0" max="8" step="0.5" />
+          <span class="val" id="v-bottomWidth"></span>
+        </div>
+        <div class="row">
+          <label for="c-bottomOpacity">— opacity</label>
+          <input type="range" id="c-bottomOpacity" min="0" max="1" step="0.05" />
+          <span class="val" id="v-bottomOpacity"></span>
+        </div>
+        <div class="divider"></div>
+
+        <div class="row">
+          <label for="c-floorLift">Floor lift</label>
+          <input type="range" id="c-floorLift" min="0" max="1" step="0.02" />
+          <span class="val" id="v-floorLift"></span>
+        </div>
+        <div class="row">
+          <label for="c-smoothing">Smoothing</label>
+          <input type="range" id="c-smoothing" min="0" max="2" step="0.1" />
+          <span class="val" id="v-smoothing"></span>
+        </div>
+        <div class="divider"></div>
+
+        <div class="row">
+          <label for="c-softGap">Soft gap (px)</label>
+          <input type="range" id="c-softGap" min="0" max="40" step="1" />
+          <span class="val" id="v-softGap"></span>
+        </div>
+        <div class="row">
+          <label for="c-hardGap">Hard gap (px)</label>
+          <input type="range" id="c-hardGap" min="0" max="60" step="1" />
+          <span class="val" id="v-hardGap"></span>
+        </div>
+
+        <div class="panel-actions">
+          <button id="reset">Reset to defaults</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Copy preset <span class="tag">style only</span></h2>
+        <p class="caption">
+          The preset is pure style - paste it into <code>createMask(el, input, preset)</code>. Pitch points are never
+          part of it.
+        </p>
+        <div class="preset-grid">
+          <div class="preset-box">
+            <div class="preset-box-head">
+              <span>TypeScript</span>
+              <button id="copy-ts" class="mini">Copy</button>
+            </div>
+            <pre id="out-ts"></pre>
+          </div>
+          <div class="preset-box">
+            <div class="preset-box-head">
+              <span>JSON</span>
+              <button id="copy-json" class="mini">Copy</button>
+            </div>
+            <pre id="out-json"></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Your own text</h2>
+        <p class="caption">
+          Type any text and see rules-based pitch applied live, in the selected language. Or paste your own
+          <code>Token[]</code> (the bring-your-own-points path) to preview AI / measured melody.
+        </p>
+        <div class="row">
+          <label for="lang">Language (rules)</label>
+          <span class="spacer"></span>
+          <select id="lang">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="pt">Português</option>
+            <option value="ru">Русский</option>
+          </select>
+        </div>
+        <textarea id="your-text" rows="3" spellcheck="false"></textarea>
+        <div class="passage small" id="yourtext"></div>
+
+        <details class="tokens-details">
+          <summary>Paste external tokens JSON (Token[])</summary>
+          <p class="caption">
+            An array of <code>{ text, pitch: [onset, offset], trailing }</code>. Valid JSON renders below; the language
+            setting is ignored for this path.
+          </p>
+          <textarea id="tokens-json" rows="6" spellcheck="false"></textarea>
+          <p class="err" id="tokens-err"></p>
+          <div class="passage small" id="tokenstext"></div>
+        </details>
+      </section>
+
+      <footer>
+        <p>prosody-mask · MIT · zero runtime dependencies</p>
+      </footer>
+    </div>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

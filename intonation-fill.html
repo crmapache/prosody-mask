@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Интонация как заливка - конструктор</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#26221E;--muted:#A79E90;--amber:#C6851C;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:#fff;color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;padding:48px 22px 80px;}
+  .wrap{max-width:700px;margin:0 auto;}
+  h1{font-family:"Newsreader",Georgia,serif;font-weight:500;font-size:29px;letter-spacing:-0.01em;margin:0 0 8px;}
+  .sub{color:var(--muted);font-size:15px;line-height:1.6;max-width:600px;margin:0 0 26px;}
+
+  .panel{border:1px solid #E7E1D6;border-radius:12px;padding:14px 18px 18px;margin-bottom:30px;background:#FCFBF8;}
+  .panel h2{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500;margin:2px 0 14px;}
+  .row{display:grid;grid-template-columns:132px 1fr 52px;align-items:center;gap:12px;margin-bottom:11px;}
+  .row:last-child{margin-bottom:0;}
+  .row label{font-size:13px;color:var(--ink);}
+  .row .val{font-size:12px;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums;}
+  input[type=range]{width:100%;accent-color:var(--amber);height:20px;}
+  input[type=color]{width:44px;height:26px;border:1px solid #DED8CD;border-radius:6px;background:none;cursor:pointer;padding:2px;}
+  .divider{height:1px;background:#EFE9DE;margin:14px 0;}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:34px;}
+  button{font:inherit;font-size:13px;background:#fff;color:var(--ink);border:1px solid #DED8CD;
+    border-radius:999px;padding:8px 15px;cursor:pointer;transition:background .15s,border-color .15s;}
+  button:hover{background:#FAF7F1;border-color:#CDBFAE;}
+  button:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+
+  .passage{position:relative;font-family:"Newsreader",Georgia,serif;font-size:22px;line-height:1.85;}
+  .passage svg.fill{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible;}
+  .word{position:relative;z-index:1;border-radius:4px;transition:background .18s,color .18s;}
+  .gap{display:inline-block;}
+  .gap.short{width:10px;}
+  .gap.stop{width:22px;}
+  .word.lit{background:#EEE9FB;color:#4A3FB0;}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Интонация как заливка</h1>
+  <p class="sub">Заливка живёт внутри высоты текста: растёт от пола до макушек букв и в конце вдоха уходит обратно в пол. Цвет общий на всё, прозрачность у каждого слоя своя - настрой под себя ниже.</p>
+
+  <div class="panel">
+    <h2>Конструктор</h2>
+    <div class="row">
+      <label for="c-color">Цвет (общий)</label>
+      <input type="range" disabled style="visibility:hidden">
+      <input type="color" id="c-color" value="#C6851C" style="justify-self:end;grid-column:3;">
+    </div>
+    <div class="divider"></div>
+    <div class="row">
+      <label for="c-topW">Верхняя линия</label>
+      <input type="range" id="c-topW" min="0" max="8" step="0.5" value="1.5">
+      <span class="val" id="v-topW">1.5</span>
+    </div>
+    <div class="row">
+      <label for="c-topO">— прозрачность</label>
+      <input type="range" id="c-topO" min="0" max="1" step="0.05" value="0.45">
+      <span class="val" id="v-topO">0.45</span>
+    </div>
+    <div class="divider"></div>
+    <div class="row">
+      <label for="c-botW">Нижняя линия</label>
+      <input type="range" id="c-botW" min="0" max="8" step="0.5" value="2.5">
+      <span class="val" id="v-botW">2.5</span>
+    </div>
+    <div class="row">
+      <label for="c-botO">— прозрачность</label>
+      <input type="range" id="c-botO" min="0" max="1" step="0.05" value="0.85">
+      <span class="val" id="v-botO">0.85</span>
+    </div>
+    <div class="divider"></div>
+    <div class="row">
+      <label for="c-fillO">Заливка</label>
+      <input type="range" id="c-fillO" min="0" max="1" step="0.02" value="0.16">
+      <span class="val" id="v-fillO">0.16</span>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="t-read">▶ Прочитать по ритму</button>
+    <button id="t-reset">Сбросить настройки</button>
+  </div>
+
+  <div class="passage" id="passage"></div>
+</div>
+
+<script>
+const sentences = [
+  [ { subs:[{t:"Good approach", s:3, e:1}], pause:"stop", punct:"." } ],
+  [ { subs:[
+        {t:"Measuring event loop lag", s:2, e:3},
+        {t:"and then isolating CPU to bound synchronous work", s:3, e:4},
+        {t:"is exactly the right workflow", s:4, e:1}
+      ], pause:"stop", punct:"." } ],
+  [ { subs:[
+        {t:"Worker threads or chunking", s:2, e:3},
+        {t:"can help", s:3, e:3},
+        {t:"when you can't avoid it", s:3, e:1}
+      ], pause:"stop", punct:"." } ],
+  [ { subs:[{t:"In a multi token production deployment", s:2, e:3}], pause:"comma", punct:"," },
+    { subs:[
+        {t:"how do you decide", s:3, e:4},
+        {t:"between node cluster module", s:3, e:4}
+      ], pause:"comma", punct:"," },
+    { subs:[{t:"separate container replicas", s:3, e:4}], pause:"comma", punct:"," },
+    { subs:[{t:"and worker threads for scaling", s:3, e:4}], pause:"comma", punct:"," },
+    { subs:[{t:"and what trade to have strived that choice", s:4, e:1}], pause:"stop", punct:"." } ]
+];
+
+const bands = [];
+sentences.forEach((sent, si) => sent.forEach((band, bi) => {
+  bands.push({ ...band, last: (si===sentences.length-1 && bi===sent.length-1) });
+}));
+
+const DEFAULTS = { color:"#C6851C", topW:1.5, topO:0.45, botW:2.5, botO:0.85, fillO:0.16 };
+const ids = ["color","topW","topO","botW","botO","fillO"];
+
+const passage = document.getElementById("passage");
+const wordEls = [];
+let svg;
+
+function hexToRgb(h){
+  const n = parseInt(h.slice(1),16);
+  return [(n>>16)&255,(n>>8)&255,n&255];
+}
+function rgba(hex, a){ const [r,g,b]=hexToRgb(hex); return "rgba("+r+","+g+","+b+","+a+")"; }
+
+function settings(){
+  return {
+    color: document.getElementById("c-color").value,
+    topW: +document.getElementById("c-topW").value,
+    topO: +document.getElementById("c-topO").value,
+    botW: +document.getElementById("c-botW").value,
+    botO: +document.getElementById("c-botO").value,
+    fillO: +document.getElementById("c-fillO").value
+  };
+}
+
+function build(){
+  passage.innerHTML = "";
+  wordEls.length = 0;
+  svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+  svg.setAttribute("class","fill");
+  passage.appendChild(svg);
+
+  bands.forEach((band, bandId) => {
+    const flat = [];
+    let prevEnd = null;
+    band.subs.forEach((sub, i) => {
+      const words = sub.t.split(" ");
+      const start = (i===0) ? sub.s : prevEnd;
+      const end = sub.e;
+      words.forEach((w, wi) => {
+        const lvl = words.length===1 ? start : start + (end-start)*(wi/(words.length-1));
+        flat.push({ w, lvl });
+      });
+      prevEnd = end;
+    });
+    flat.forEach((o, i) => {
+      const span = document.createElement("span");
+      span.className = "word";
+      span.dataset.lvl = o.lvl;
+      span.dataset.band = bandId;
+      const isLast = i === flat.length-1;
+      span.textContent = o.w + (isLast && band.punct ? band.punct : "");
+      passage.appendChild(span);
+      wordEls.push(span);
+      if(!isLast) passage.appendChild(document.createTextNode(" "));
+    });
+    if(!band.last){
+      const gap = document.createElement("span");
+      gap.className = "gap " + (band.pause==="stop" ? "stop" : "short");
+      gap.innerHTML = "&nbsp;";
+      passage.appendChild(gap);
+    }
+  });
+  requestAnimationFrame(draw);
+}
+
+function smoothTop(pts){
+  let d = "M " + pts[0].x.toFixed(1) + " " + pts[0].y.toFixed(1);
+  for(let i=0;i<pts.length-1;i++){
+    const p0=pts[i-1]||pts[i], p1=pts[i], p2=pts[i+1], p3=pts[i+2]||p2;
+    const c1x=p1.x+(p2.x-p0.x)/6, c1y=p1.y+(p2.y-p0.y)/6;
+    const c2x=p2.x-(p3.x-p1.x)/6, c2y=p2.y-(p3.y-p1.y)/6;
+    d+=" C "+c1x.toFixed(1)+" "+c1y.toFixed(1)+" "+c2x.toFixed(1)+" "+c2y.toFixed(1)+" "+p2.x.toFixed(1)+" "+p2.y.toFixed(1);
+  }
+  return d;
+}
+
+function draw(){
+  svg.innerHTML = "";
+  const st = settings();
+  const rb = passage.getBoundingClientRect();
+  const fontPx = parseFloat(getComputedStyle(passage).fontSize);
+
+  const runs = [];
+  let cur = null;
+  wordEls.forEach(el => {
+    const b = el.getBoundingClientRect();
+    const top = Math.round(b.top - rb.top);
+    const bid = el.dataset.band;
+    if(!cur || cur.bid !== bid || Math.abs(cur.top - top) > 14){
+      cur = { bid, top, words:[] };
+      runs.push(cur);
+    }
+    cur.words.push({ el, b });
+  });
+
+  runs.forEach((run, ri) => {
+    const ws = run.words;
+    const startsBand = ri===0 || runs[ri-1].bid !== run.bid;
+    const endsBand = ri===runs.length-1 || runs[ri+1].bid !== run.bid;
+
+    let rectTop = Infinity, rectBottom = -Infinity;
+    ws.forEach(o => { rectTop=Math.min(rectTop,o.b.top-rb.top); rectBottom=Math.max(rectBottom,o.b.bottom-rb.top); });
+    const hl = Math.max(0, ((rectBottom-rectTop) - fontPx)/2);
+    const floor = rectBottom - hl;
+    const capTop = rectTop + hl;
+    const bandH = floor - capTop;
+
+    const leftX = ws[0].b.left - rb.left;
+    const rightX = ws[ws.length-1].b.right - rb.left;
+
+    const frac = lvl => 0.38 + (Math.max(1,Math.min(4,lvl))-1)/3 * 0.62;
+    const topAt = lvl => floor - bandH*frac(lvl);
+    const lvlOf = o => parseFloat(o.el.dataset.lvl);
+
+    const top = [];
+    top.push({ x:leftX, y: startsBand ? floor : topAt(lvlOf(ws[0])) });
+    ws.forEach(o => top.push({ x:(o.b.left+o.b.right)/2 - rb.left, y:topAt(lvlOf(o)) }));
+    top.push({ x:rightX, y: endsBand ? floor : topAt(lvlOf(ws[ws.length-1])) });
+
+    const topD = smoothTop(top);
+    const fillD = topD + " L "+rightX.toFixed(1)+" "+floor.toFixed(1)+" L "+leftX.toFixed(1)+" "+floor.toFixed(1)+" Z";
+
+    if(st.fillO > 0){
+      const fill = document.createElementNS("http://www.w3.org/2000/svg","path");
+      fill.setAttribute("d", fillD);
+      fill.setAttribute("fill", rgba(st.color, st.fillO));
+      svg.appendChild(fill);
+    }
+    if(st.topW > 0 && st.topO > 0){
+      const edge = document.createElementNS("http://www.w3.org/2000/svg","path");
+      edge.setAttribute("d", topD);
+      edge.setAttribute("fill","none");
+      edge.setAttribute("stroke", rgba(st.color, st.topO));
+      edge.setAttribute("stroke-width", st.topW);
+      edge.setAttribute("stroke-linecap","round");
+      edge.setAttribute("stroke-linejoin","round");
+      svg.appendChild(edge);
+    }
+    if(st.botW > 0 && st.botO > 0){
+      const base = document.createElementNS("http://www.w3.org/2000/svg","path");
+      base.setAttribute("d","M "+leftX.toFixed(1)+" "+floor.toFixed(1)+" L "+rightX.toFixed(1)+" "+floor.toFixed(1));
+      base.setAttribute("stroke", rgba(st.color, st.botO));
+      base.setAttribute("stroke-width", st.botW);
+      base.setAttribute("stroke-linecap","round");
+      svg.appendChild(base);
+    }
+  });
+}
+
+function syncReadouts(){
+  document.getElementById("v-topW").textContent = (+document.getElementById("c-topW").value).toFixed(1);
+  document.getElementById("v-topO").textContent = (+document.getElementById("c-topO").value).toFixed(2);
+  document.getElementById("v-botW").textContent = (+document.getElementById("c-botW").value).toFixed(1);
+  document.getElementById("v-botO").textContent = (+document.getElementById("c-botO").value).toFixed(2);
+  document.getElementById("v-fillO").textContent = (+document.getElementById("c-fillO").value).toFixed(2);
+  document.documentElement.style.setProperty("--amber", document.getElementById("c-color").value);
+}
+
+["c-color","c-topW","c-topO","c-botW","c-botO","c-fillO"].forEach(id => {
+  document.getElementById(id).addEventListener("input", () => { syncReadouts(); draw(); });
+});
+
+document.getElementById("t-reset").onclick = () => {
+  document.getElementById("c-color").value = DEFAULTS.color;
+  document.getElementById("c-topW").value = DEFAULTS.topW;
+  document.getElementById("c-topO").value = DEFAULTS.topO;
+  document.getElementById("c-botW").value = DEFAULTS.botW;
+  document.getElementById("c-botO").value = DEFAULTS.botO;
+  document.getElementById("c-fillO").value = DEFAULTS.fillO;
+  syncReadouts(); draw();
+};
+
+let playing = false;
+document.getElementById("t-read").onclick = async () => {
+  if(playing) return;
+  playing = true;
+  const pauseAfter = [];
+  bands.forEach(band => {
+    let n = 0;
+    band.subs.forEach(s => n += s.t.split(" ").length);
+    for(let i=0;i<n;i++) pauseAfter.push(i===n-1 && !band.last ? band.pause : null);
+  });
+  for(let i=0;i<wordEls.length;i++){
+    wordEls[i].classList.add("lit");
+    await new Promise(r=>setTimeout(r,240));
+    wordEls[i].classList.remove("lit");
+    if(pauseAfter[i]==="stop") await new Promise(r=>setTimeout(r,500));
+    else if(pauseAfter[i]==="comma") await new Promise(r=>setTimeout(r,230));
+  }
+  playing = false;
+};
+
+syncReadouts();
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
+window.addEventListener("resize", () => requestAnimationFrame(draw));
+build();
+</script>
+</body>
+</html>
