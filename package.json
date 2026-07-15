@@ -5,6 +5,14 @@
   "author": "Maksim Zolotoi",
   "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crmapache/prosody-mask.git"
+  },
+  "bugs": {
+    "url": "https://github.com/crmapache/prosody-mask/issues"
+  },
+  "homepage": "https://prosody-mask.vercel.app",
   "keywords": [
     "prosody",
     "intonation",
@@ -12,18 +20,58 @@
     "svg",
     "text",
     "speech",
-    "melody"
+    "melody",
+    "react",
+    "vue",
+    "svelte",
+    "web-component",
+    "custom-element"
   ],
-  "sideEffects": false,
+  "sideEffects": [
+    "**/web-component/**"
+  ],
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "react": [
+        "./dist/react/index.d.ts"
+      ],
+      "vue": [
+        "./dist/vue/index.d.ts"
+      ],
+      "svelte": [
+        "./dist/svelte/index.d.ts"
+      ],
+      "web-component": [
+        "./dist/web-component/index.d.ts"
+      ]
+    }
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    }
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js"
+    },
+    "./vue": {
+      "types": "./dist/vue/index.d.ts",
+      "import": "./dist/vue/index.js"
+    },
+    "./svelte": {
+      "types": "./dist/svelte/index.d.ts",
+      "import": "./dist/svelte/index.js"
+    },
+    "./web-component": {
+      "types": "./dist/web-component/index.d.ts",
+      "import": "./dist/web-component/index.js"
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "dist",
@@ -39,19 +87,35 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "vue": ">=3"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@eslint/js": "^9.26.0",
     "@types/node": "^20.11.0",
+    "@types/react": "^19.0.0",
     "eslint": "^9.26.0",
     "eslint-config-prettier": "^9.1.0",
     "jsdom": "^25.0.0",
     "prettier": "^3.4.0",
+    "react": "^19.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.7.0",
     "typescript-eslint": "^8.20.0",
     "vite": "^6.0.0",
-    "vitest": "^2.1.0"
+    "vitest": "^2.1.0",
+    "vue": "^3.5.0"
   }
 }
