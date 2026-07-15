@@ -3,11 +3,14 @@ import type { PitchPair, Token } from '../types'
 import { assignPitch } from './engine'
 import { en } from './en'
 import { es } from './es'
+import { fr } from './fr'
+import { it } from './it'
 import type { LanguageProfile } from './profile'
 import { pt } from './pt'
+import { ro } from './ro'
 import { ru } from './ru'
 
-const PROFILES: Record<string, LanguageProfile> = { en, es, pt, ru }
+const PROFILES: Record<string, LanguageProfile> = { en, es, pt, ru, fr, it, ro }
 
 /** Languages with a built-in rules profile. */
 export const supportedLanguages: string[] = Object.keys(PROFILES)

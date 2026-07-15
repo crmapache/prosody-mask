@@ -7,7 +7,7 @@ import type { MaskHandle, MaskStyle, Token } from '../types'
 export interface ProsodyMaskProps {
   /** Plain text; tokenised and pitched by the built-in rules. Ignored when `tokens` is set. */
   text?: string
-  /** Rules language for `text` (`en` default, plus `es`, `pt`, `ru`). */
+  /** Rules language for `text` (`en` default, plus `es`, `fr`, `it`, `pt`, `ro`, `ru`). */
   lang?: string
   /** Pre-pitched tokens (from an LLM or a pitch tracker) — used verbatim, wins over `text`. */
   tokens?: Token[]

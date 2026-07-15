@@ -27,7 +27,8 @@ the overlay is purely decorative.
   Rules, an LLM, or a real pitch tracker all produce the same shape.
 - **Use it either way:** rules out of the box, or bring your own points for
   accuracy.
-- Built-in rules for **English, Spanish, Portuguese and Russian**.
+- Built-in rules for **English, Spanish, French, Italian, Portuguese, Romanian
+  and Russian**.
 - **Wrappers** for React, Vue, Svelte, and a `<prosody-mask>` Web Component
   (which also covers Angular and anything else). Each framework runtime is an
   _optional_ peer dependency, so you never pull in one you don't use.
@@ -56,7 +57,7 @@ mask.destroy()
 That's it: the package tokenises the text, computes pitch from intonation rules,
 groups by pauses and draws the overlay behind the words.
 
-Pick a language with `lang` (`en` default, plus `es`, `pt`, `ru`):
+Pick a language with `lang` (`en` default, plus `es`, `fr`, `it`, `pt`, `ro`, `ru`):
 
 ```ts
 createMask(el, { text: '¿Viste la luz sobre el agua?', lang: 'es' })

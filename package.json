@@ -1,6 +1,6 @@
 {
   "name": "prosody-mask",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Render a translucent intonation/breath-group mask over flowing text. Rules out of the box, or bring your own pitch points (LLM / pitch tracker).",
   "author": "Maksim Zolotoi",
   "license": "MIT",

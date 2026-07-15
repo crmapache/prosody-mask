@@ -64,11 +64,14 @@ describe('rules engine', () => {
     expect(avg(the)).toBeLessThan(avg(system))
   })
 
-  it('supports the four shipped languages without crashing and stays in range', () => {
-    expect(supportedLanguages).toEqual(expect.arrayContaining(['en', 'es', 'pt', 'ru']))
+  it('supports the shipped languages without crashing and stays in range', () => {
+    expect(supportedLanguages).toEqual(expect.arrayContaining(['en', 'es', 'pt', 'ru', 'fr', 'it', 'ro']))
     expect(inRange(computeTokens('¿Viste la luz sobre el agua?', { lang: 'es' }))).toBe(true)
     expect(inRange(computeTokens('Você viu a luz sobre a água?', { lang: 'pt' }))).toBe(true)
     expect(inRange(computeTokens('Ты видел свет над водой?', { lang: 'ru' }))).toBe(true)
+    expect(inRange(computeTokens('As-tu vu la lumière sur l’eau ?', { lang: 'fr' }))).toBe(true)
+    expect(inRange(computeTokens('Hai visto la luce sull’acqua?', { lang: 'it' }))).toBe(true)
+    expect(inRange(computeTokens('Ai văzut lumina peste apă?', { lang: 'ro' }))).toBe(true)
   })
 
   it('unknown language falls back to English rules', () => {
