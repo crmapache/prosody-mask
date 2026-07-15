@@ -34,7 +34,9 @@
         </p>
       </header>
 
-      <section class="block">
+      <div class="layout">
+        <main class="layout-main">
+          <section class="block">
         <div class="section-head">
           <h2>Live specimen</h2>
           <div class="seg" role="tablist" aria-label="Pitch source">
@@ -45,81 +47,6 @@
         <p class="caption" id="mode-caption"></p>
         <div class="specimen">
           <div class="passage" id="demo"></div>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="section-head">
-          <h2>Style</h2>
-          <button id="reset" class="ghost">Reset to defaults</button>
-        </div>
-
-        <div class="controls">
-          <div class="row">
-            <label for="c-color">Colour</label>
-            <span class="hex" id="c-color-hex"></span>
-            <input type="color" id="c-color" value="#C6851C" />
-          </div>
-          <div class="row">
-            <label for="c-fillOpacity">Fill opacity</label>
-            <input type="range" id="c-fillOpacity" min="0" max="1" step="0.02" />
-            <span class="val" id="v-fillOpacity"></span>
-          </div>
-
-          <div class="group-label">Top edge</div>
-          <div class="row">
-            <label for="c-topWidth">Width</label>
-            <input type="range" id="c-topWidth" min="0" max="8" step="0.5" />
-            <span class="val" id="v-topWidth"></span>
-          </div>
-          <div class="row">
-            <label for="c-topOpacity">Opacity</label>
-            <input type="range" id="c-topOpacity" min="0" max="1" step="0.05" />
-            <span class="val" id="v-topOpacity"></span>
-          </div>
-
-          <div class="group-label">Baseline</div>
-          <div class="row">
-            <label for="c-bottomWidth">Width</label>
-            <input type="range" id="c-bottomWidth" min="0" max="8" step="0.5" />
-            <span class="val" id="v-bottomWidth"></span>
-          </div>
-          <div class="row">
-            <label for="c-bottomOpacity">Opacity</label>
-            <input type="range" id="c-bottomOpacity" min="0" max="1" step="0.05" />
-            <span class="val" id="v-bottomOpacity"></span>
-          </div>
-
-          <div class="group-label">Shape</div>
-          <div class="row">
-            <label for="c-floorLift">Floor lift</label>
-            <input type="range" id="c-floorLift" min="0" max="1" step="0.02" />
-            <span class="val" id="v-floorLift"></span>
-          </div>
-          <div class="row">
-            <label for="c-smoothing">Smoothing</label>
-            <input type="range" id="c-smoothing" min="0" max="2" step="0.1" />
-            <span class="val" id="v-smoothing"></span>
-          </div>
-
-          <div class="group-label">Pause width</div>
-          <div class="row">
-            <label for="c-softGap">Small (px)</label>
-            <input type="range" id="c-softGap" min="0" max="40" step="1" />
-            <span class="val" id="v-softGap"></span>
-          </div>
-          <div class="row">
-            <label for="c-hardGap">Big (px)</label>
-            <input type="range" id="c-hardGap" min="0" max="60" step="1" />
-            <span class="val" id="v-hardGap"></span>
-          </div>
-
-          <div class="group-label">Text</div>
-          <div class="row">
-            <label for="c-fontSize">Size (px)</label>
-            <input type="range" id="c-fontSize" min="16" max="40" step="1" />
-            <span class="val" id="v-fontSize"></span>
-          </div>
         </div>
       </section>
 
@@ -199,6 +126,85 @@
           </div>
         </details>
       </section>
+        </main>
+
+        <aside class="layout-side">
+          <section class="panel controls-panel">
+            <div class="section-head">
+              <h2>Style</h2>
+              <button id="reset" class="ghost">Reset</button>
+            </div>
+
+            <div class="controls">
+              <div class="row">
+                <label for="c-color">Colour</label>
+                <span class="hex" id="c-color-hex"></span>
+                <input type="color" id="c-color" value="#C6851C" />
+              </div>
+              <div class="row">
+                <label for="c-fillOpacity">Fill</label>
+                <input type="range" id="c-fillOpacity" min="0" max="1" step="0.02" />
+                <span class="val" id="v-fillOpacity"></span>
+              </div>
+
+              <div class="group-label">Top edge</div>
+              <div class="row">
+                <label for="c-topWidth">Width</label>
+                <input type="range" id="c-topWidth" min="0" max="8" step="0.5" />
+                <span class="val" id="v-topWidth"></span>
+              </div>
+              <div class="row">
+                <label for="c-topOpacity">Opacity</label>
+                <input type="range" id="c-topOpacity" min="0" max="1" step="0.05" />
+                <span class="val" id="v-topOpacity"></span>
+              </div>
+
+              <div class="group-label">Baseline</div>
+              <div class="row">
+                <label for="c-bottomWidth">Width</label>
+                <input type="range" id="c-bottomWidth" min="0" max="8" step="0.5" />
+                <span class="val" id="v-bottomWidth"></span>
+              </div>
+              <div class="row">
+                <label for="c-bottomOpacity">Opacity</label>
+                <input type="range" id="c-bottomOpacity" min="0" max="1" step="0.05" />
+                <span class="val" id="v-bottomOpacity"></span>
+              </div>
+
+              <div class="group-label">Shape</div>
+              <div class="row">
+                <label for="c-floorLift">Floor</label>
+                <input type="range" id="c-floorLift" min="0" max="1" step="0.02" />
+                <span class="val" id="v-floorLift"></span>
+              </div>
+              <div class="row">
+                <label for="c-smoothing">Smooth</label>
+                <input type="range" id="c-smoothing" min="0" max="2" step="0.1" />
+                <span class="val" id="v-smoothing"></span>
+              </div>
+
+              <div class="group-label">Pause width (px)</div>
+              <div class="row">
+                <label for="c-softGap">Small</label>
+                <input type="range" id="c-softGap" min="0" max="40" step="1" />
+                <span class="val" id="v-softGap"></span>
+              </div>
+              <div class="row">
+                <label for="c-hardGap">Big</label>
+                <input type="range" id="c-hardGap" min="0" max="60" step="1" />
+                <span class="val" id="v-hardGap"></span>
+              </div>
+
+              <div class="group-label">Text size (px)</div>
+              <div class="row">
+                <label for="c-fontSize">Size</label>
+                <input type="range" id="c-fontSize" min="16" max="40" step="1" />
+                <span class="val" id="v-fontSize"></span>
+              </div>
+            </div>
+          </section>
+        </aside>
+      </div>
 
       <footer>
         <span>prosody-mask</span>

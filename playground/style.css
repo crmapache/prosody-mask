@@ -40,14 +40,36 @@ body {
 }
 
 .wrap {
-  max-width: 760px;
+  max-width: 1080px;
   margin: 0 auto;
+}
+
+/* ---------- layout ---------- */
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 28px;
+  align-items: start;
+}
+.layout-main {
+  min-width: 0;
+}
+.layout-side {
+  position: sticky;
+  top: 24px;
+}
+.controls-panel {
+  margin-bottom: 0;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
 }
 
 /* ---------- masthead ---------- */
 
 .masthead {
-  margin-bottom: 50px;
+  margin-bottom: 40px;
+  max-width: 640px;
 }
 .eyebrow {
   display: flex;
@@ -236,6 +258,21 @@ code {
   font-family: var(--mono);
   font-size: 12px;
   color: var(--muted);
+}
+
+/* compact rows inside the narrow sticky sidebar */
+.controls-panel .row {
+  grid-template-columns: 56px 1fr 40px;
+  gap: 10px;
+  min-height: 30px;
+}
+.controls-panel .val,
+.controls-panel .hex {
+  font-size: 11px;
+}
+.controls-panel input[type='color'] {
+  width: 40px;
+  height: 26px;
 }
 
 /* custom range slider */
@@ -552,18 +589,16 @@ footer .dot {
 /* ---------- entrance ---------- */
 
 .masthead,
-.block,
-.panel,
+.layout-main > section,
 footer {
   animation: rise 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
-.block {
-  animation-delay: 0.04s;
+.layout-side {
+  /* opacity only - a transform here would break the sticky positioning */
+  animation: fade 0.5s ease both;
+  animation-delay: 0.1s;
 }
-.panel:nth-of-type(2) {
-  animation-delay: 0.08s;
-}
-.panel:nth-of-type(3) {
+footer {
   animation-delay: 0.12s;
 }
 @keyframes rise {
@@ -576,8 +611,37 @@ footer {
     transform: none;
   }
 }
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 
 /* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .layout-side {
+    position: static;
+  }
+  .controls-panel {
+    max-height: none;
+    overflow: visible;
+    margin-bottom: 24px;
+  }
+  .controls-panel .row {
+    grid-template-columns: 116px 1fr 52px;
+    gap: 14px;
+  }
+  .controls-panel input[type='color'] {
+    width: 52px;
+  }
+}
 
 @media (max-width: 560px) {
   body {
