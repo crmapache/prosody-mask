@@ -13,7 +13,7 @@ export const defaultStyle: MaskStyle = {
   bottomWidth: 2.5,
   bottomOpacity: 0.85,
   floorLift: 0.38,
-  softGap: 10,
-  hardGap: 22,
+  softGap: 1,
+  hardGap: 2,
   smoothing: 1,
 }

@@ -66,9 +66,9 @@ export interface MaskStyle {
   bottomOpacity: number
   /** Minimum fill height (`0..1`) so low pitch never collapses to the floor. */
   floorLift: number
-  /** Gap in px for a soft pause (comma / `;` / `:`). */
+  /** Soft-pause gap (comma / `;` / `:`) in spaces (× the font's space width). */
   softGap: number
-  /** Gap in px for a hard pause (`.` / `?` / `!`). */
+  /** Hard-pause gap (`.` / `?` / `!`) in spaces (× the font's space width). */
   hardGap: number
   /** Catmull-Rom tension knob; `1` = reference smoothing, `0` = straight lines. */
   smoothing: number

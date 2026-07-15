@@ -1,7 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it } from 'vitest'
 import { createMask } from '../src/renderer'
-import { defaultStyle } from '../src/style'
 
 // jsdom cannot measure real layout (all rects are 0), so these tests assert node
 // structure, layer skipping and clean teardown - not pixel geometry.
@@ -38,7 +37,10 @@ describe('createMask (DOM structure)', () => {
     handle = createMask(el, { text: 'One, two.' })
     const gaps = Array.from(el.querySelectorAll('span')).filter((s) => s.getAttribute('aria-hidden') === 'true')
     expect(gaps).toHaveLength(1)
-    expect(gaps[0].style.width).toBe(`${defaultStyle.softGap}px`)
+    // Gap width is measured in spaces (× the font's space width), so it is a
+    // positive px value proportional to font size, not a fixed number.
+    expect(gaps[0].style.width).toMatch(/px$/)
+    expect(parseFloat(gaps[0].style.width)).toBeGreaterThan(0)
   })
 
   it('uses supplied tokens verbatim (bring your own points)', () => {

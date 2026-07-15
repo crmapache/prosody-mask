@@ -141,11 +141,6 @@
                 <span class="hex" id="c-color-hex"></span>
                 <input type="color" id="c-color" value="#C6851C" />
               </div>
-              <div class="row">
-                <label for="c-fillOpacity">Fill</label>
-                <input type="range" id="c-fillOpacity" min="0" max="1" step="0.02" />
-                <span class="val" id="v-fillOpacity"></span>
-              </div>
 
               <div class="group-label">Top edge</div>
               <div class="row">
@@ -173,6 +168,11 @@
 
               <div class="group-label">Shape</div>
               <div class="row">
+                <label for="c-fillOpacity">Opacity</label>
+                <input type="range" id="c-fillOpacity" min="0" max="1" step="0.02" />
+                <span class="val" id="v-fillOpacity"></span>
+              </div>
+              <div class="row">
                 <label for="c-floorLift">Floor</label>
                 <input type="range" id="c-floorLift" min="0" max="1" step="0.02" />
                 <span class="val" id="v-floorLift"></span>
@@ -183,15 +183,15 @@
                 <span class="val" id="v-smoothing"></span>
               </div>
 
-              <div class="group-label">Pause width (px)</div>
+              <div class="group-label">Pause (spaces)</div>
               <div class="row">
                 <label for="c-softGap">Small</label>
-                <input type="range" id="c-softGap" min="0" max="40" step="1" />
+                <input type="range" id="c-softGap" min="1" max="4" step="1" />
                 <span class="val" id="v-softGap"></span>
               </div>
               <div class="row">
                 <label for="c-hardGap">Big</label>
-                <input type="range" id="c-hardGap" min="0" max="60" step="1" />
+                <input type="range" id="c-hardGap" min="1" max="4" step="1" />
                 <span class="val" id="v-hardGap"></span>
               </div>
 

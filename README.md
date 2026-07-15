@@ -118,8 +118,8 @@ createMask(el, { text }, { ...defaultStyle, color: '#3b6ea5', fillOpacity: 0.2 }
 | `bottomWidth`   | number | `2.5`     | Baseline width in px (`0` hides it).                           |
 | `bottomOpacity` | number | `0.85`    | Baseline opacity, `0..1`.                                      |
 | `floorLift`     | number | `0.38`    | Minimum fill height so low pitch never collapses to the floor. |
-| `softGap`       | number | `10`      | Gap in px for a soft pause (comma / `;` / `:`).                |
-| `hardGap`       | number | `22`      | Gap in px for a hard pause (`.` / `?` / `!`).                  |
+| `softGap`       | number | `1`       | Soft-pause gap (comma / `;` / `:`) in spaces (× the font's space width). |
+| `hardGap`       | number | `2`       | Hard-pause gap (`.` / `?` / `!`) in spaces (× the font's space width).   |
 | `smoothing`     | number | `1`       | Catmull-Rom tension; `1` = reference, `0` = straight lines.    |
 
 Tune a look in the [playground](#playground) and copy it as a preset.

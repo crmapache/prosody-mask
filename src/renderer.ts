@@ -62,6 +62,7 @@ export function createMask(container: HTMLElement, input: MaskInput, style?: Par
   let gaps: GapEl[] = []
   let svg: SVGSVGElement | null = null
   let raf = 0
+  let measureCanvas: HTMLCanvasElement | null = null
 
   const scheduleDraw = (): void => {
     if (raf) return
@@ -112,20 +113,38 @@ export function createMask(container: HTMLElement, input: MaskInput, style?: Par
         const hard = group.pause === 'hard'
         gap.setAttribute('aria-hidden', 'true')
         gap.style.display = 'inline-block'
-        gap.style.width = `${hard ? st.hardGap : st.softGap}px`
         container.appendChild(gap)
         gaps.push({ el: gap, hard })
       }
     })
+    applyGapWidths()
+  }
+
+  /**
+   * Width of one space in the container's current font. Pause gaps are measured
+   * in spaces, so they stay proportional to the text size automatically.
+   */
+  function spaceWidth(): number {
+    const cs = getComputedStyle(container)
+    const fontPx = parseFloat(cs.fontSize) || 16
+    measureCanvas ??= document.createElement('canvas')
+    const ctx = measureCanvas.getContext('2d')
+    if (!ctx) return fontPx * 0.28 // sensible fallback (~a typical space advance)
+    ctx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`
+    const w = ctx.measureText(' ').width
+    return w > 0 ? w : fontPx * 0.28
   }
 
   function applyGapWidths(): void {
-    for (const g of gaps) g.el.style.width = `${g.hard ? st.hardGap : st.softGap}px`
+    if (!gaps.length) return
+    const sw = spaceWidth()
+    for (const g of gaps) g.el.style.width = `${((g.hard ? st.hardGap : st.softGap) * sw).toFixed(2)}px`
   }
 
   function draw(): void {
     if (!svg) return
     svg.textContent = ''
+    applyGapWidths() // keep gaps proportional to the current font before measuring
     const rb = container.getBoundingClientRect()
     const fontPx = parseFloat(getComputedStyle(container).fontSize) || 16
     const lineThreshold = Math.max(8, fontPx * 0.5)
