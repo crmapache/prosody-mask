@@ -7,108 +7,122 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <div class="wrap">
-      <header>
-        <h1>prosody-mask</h1>
-        <p class="sub">
-          A translucent intonation mask that lives inside the text's own height: it grows from the floor to the letter
-          tops and returns to the floor at every real pause. Tune the look below and copy it as a preset. The melody
-          (pitch points) is a separate flow - the preset never freezes it.
+      <header class="masthead">
+        <div class="eyebrow">
+          <span>Intonation as fill</span>
+          <svg class="sig" width="112" height="26" viewBox="0 0 112 26" fill="none" aria-hidden="true">
+            <path
+              d="M2 24 C 14 24, 16 6, 30 6 S 46 24, 56 24 S 72 3, 84 3 S 100 24, 110 24"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+        <h1>prosody&#8202;<span class="slash">/</span>&#8202;mask</h1>
+        <p class="thesis">
+          A translucent mask that traces the melody of a sentence - one soft hill per breath group, rising and falling
+          with the voice and settling to the floor at every real pause. Tune the look, copy it as a preset. The pitch
+          points are a separate flow the preset never touches.
         </p>
       </header>
 
-      <section class="demo-block">
-        <div class="demo-head">
-          <h2>Demo passage</h2>
+      <section class="block">
+        <div class="section-head">
+          <h2>Live specimen</h2>
           <div class="seg" role="tablist" aria-label="Pitch source">
-            <button id="mode-rules" class="seg-btn is-active" role="tab" aria-selected="true">By rules</button>
-            <button id="mode-ai" class="seg-btn" role="tab" aria-selected="false">With AI points</button>
+            <button id="mode-rules" class="seg-btn is-active" role="tab" aria-selected="true">Rules</button>
+            <button id="mode-ai" class="seg-btn" role="tab" aria-selected="false">AI points</button>
           </div>
         </div>
         <p class="caption" id="mode-caption"></p>
-        <div class="passage" id="demo"></div>
-      </section>
-
-      <section class="panel">
-        <h2>Style constructor</h2>
-
-        <div class="row">
-          <label for="c-color">Colour (shared)</label>
-          <span class="spacer"></span>
-          <input type="color" id="c-color" value="#C6851C" />
-        </div>
-        <div class="divider"></div>
-
-        <div class="row">
-          <label for="c-fillOpacity">Fill opacity</label>
-          <input type="range" id="c-fillOpacity" min="0" max="1" step="0.02" />
-          <span class="val" id="v-fillOpacity"></span>
-        </div>
-        <div class="divider"></div>
-
-        <div class="row">
-          <label for="c-topWidth">Top line width</label>
-          <input type="range" id="c-topWidth" min="0" max="8" step="0.5" />
-          <span class="val" id="v-topWidth"></span>
-        </div>
-        <div class="row">
-          <label for="c-topOpacity">— opacity</label>
-          <input type="range" id="c-topOpacity" min="0" max="1" step="0.05" />
-          <span class="val" id="v-topOpacity"></span>
-        </div>
-        <div class="divider"></div>
-
-        <div class="row">
-          <label for="c-bottomWidth">Baseline width</label>
-          <input type="range" id="c-bottomWidth" min="0" max="8" step="0.5" />
-          <span class="val" id="v-bottomWidth"></span>
-        </div>
-        <div class="row">
-          <label for="c-bottomOpacity">— opacity</label>
-          <input type="range" id="c-bottomOpacity" min="0" max="1" step="0.05" />
-          <span class="val" id="v-bottomOpacity"></span>
-        </div>
-        <div class="divider"></div>
-
-        <div class="row">
-          <label for="c-floorLift">Floor lift</label>
-          <input type="range" id="c-floorLift" min="0" max="1" step="0.02" />
-          <span class="val" id="v-floorLift"></span>
-        </div>
-        <div class="row">
-          <label for="c-smoothing">Smoothing</label>
-          <input type="range" id="c-smoothing" min="0" max="2" step="0.1" />
-          <span class="val" id="v-smoothing"></span>
-        </div>
-        <div class="divider"></div>
-
-        <div class="row">
-          <label for="c-softGap">Soft gap (px)</label>
-          <input type="range" id="c-softGap" min="0" max="40" step="1" />
-          <span class="val" id="v-softGap"></span>
-        </div>
-        <div class="row">
-          <label for="c-hardGap">Hard gap (px)</label>
-          <input type="range" id="c-hardGap" min="0" max="60" step="1" />
-          <span class="val" id="v-hardGap"></span>
-        </div>
-
-        <div class="panel-actions">
-          <button id="reset">Reset to defaults</button>
+        <div class="specimen">
+          <div class="passage" id="demo"></div>
         </div>
       </section>
 
       <section class="panel">
-        <h2>Copy preset <span class="tag">style only</span></h2>
+        <div class="section-head">
+          <h2>Style</h2>
+          <button id="reset" class="ghost">Reset to defaults</button>
+        </div>
+
+        <div class="controls">
+          <div class="row">
+            <label for="c-color">Colour</label>
+            <span class="hex" id="c-color-hex"></span>
+            <input type="color" id="c-color" value="#C6851C" />
+          </div>
+          <div class="row">
+            <label for="c-fillOpacity">Fill opacity</label>
+            <input type="range" id="c-fillOpacity" min="0" max="1" step="0.02" />
+            <span class="val" id="v-fillOpacity"></span>
+          </div>
+
+          <div class="group-label">Top edge</div>
+          <div class="row">
+            <label for="c-topWidth">Width</label>
+            <input type="range" id="c-topWidth" min="0" max="8" step="0.5" />
+            <span class="val" id="v-topWidth"></span>
+          </div>
+          <div class="row">
+            <label for="c-topOpacity">Opacity</label>
+            <input type="range" id="c-topOpacity" min="0" max="1" step="0.05" />
+            <span class="val" id="v-topOpacity"></span>
+          </div>
+
+          <div class="group-label">Baseline</div>
+          <div class="row">
+            <label for="c-bottomWidth">Width</label>
+            <input type="range" id="c-bottomWidth" min="0" max="8" step="0.5" />
+            <span class="val" id="v-bottomWidth"></span>
+          </div>
+          <div class="row">
+            <label for="c-bottomOpacity">Opacity</label>
+            <input type="range" id="c-bottomOpacity" min="0" max="1" step="0.05" />
+            <span class="val" id="v-bottomOpacity"></span>
+          </div>
+
+          <div class="group-label">Shape</div>
+          <div class="row">
+            <label for="c-floorLift">Floor lift</label>
+            <input type="range" id="c-floorLift" min="0" max="1" step="0.02" />
+            <span class="val" id="v-floorLift"></span>
+          </div>
+          <div class="row">
+            <label for="c-smoothing">Smoothing</label>
+            <input type="range" id="c-smoothing" min="0" max="2" step="0.1" />
+            <span class="val" id="v-smoothing"></span>
+          </div>
+
+          <div class="group-label">Pause gaps</div>
+          <div class="row">
+            <label for="c-softGap">Soft (px)</label>
+            <input type="range" id="c-softGap" min="0" max="40" step="1" />
+            <span class="val" id="v-softGap"></span>
+          </div>
+          <div class="row">
+            <label for="c-hardGap">Hard (px)</label>
+            <input type="range" id="c-hardGap" min="0" max="60" step="1" />
+            <span class="val" id="v-hardGap"></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <h2>Preset</h2>
+          <span class="tag">style only</span>
+        </div>
         <p class="caption">
-          The preset is pure style - paste it into <code>createMask(el, input, preset)</code>. Pitch points are never
-          part of it.
+          Pure style - paste it into <code>createMask(el, input, preset)</code>. Pitch points never live here.
         </p>
         <div class="preset-grid">
           <div class="preset-box">
@@ -129,38 +143,62 @@
       </section>
 
       <section class="panel">
-        <h2>Your own text</h2>
-        <p class="caption">
-          Type any text and see rules-based pitch applied live, in the selected language. Or paste your own
-          <code>Token[]</code> (the bring-your-own-points path) to preview AI / measured melody.
-        </p>
-        <div class="row">
-          <label for="lang">Language (rules)</label>
-          <span class="spacer"></span>
-          <select id="lang">
-            <option value="en">English</option>
-            <option value="es">Español</option>
-            <option value="pt">Português</option>
-            <option value="ru">Русский</option>
-          </select>
+        <div class="section-head">
+          <h2>Your text</h2>
+          <div class="lang-field">
+            <span class="lf-label" id="lang-lbl">Language</span>
+            <div class="select" id="lang-select">
+              <button
+                type="button"
+                class="select-trigger"
+                id="lang-trigger"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-labelledby="lang-lbl lang-label"
+              >
+                <span id="lang-label">English</span>
+                <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <ul class="select-menu" id="lang-menu" role="listbox" aria-labelledby="lang-lbl">
+                <li class="select-option is-selected" role="option" data-value="en" aria-selected="true">English</li>
+                <li class="select-option" role="option" data-value="es" aria-selected="false">Español</li>
+                <li class="select-option" role="option" data-value="pt" aria-selected="false">Português</li>
+                <li class="select-option" role="option" data-value="ru" aria-selected="false">Русский</li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <textarea id="your-text" rows="3" spellcheck="false"></textarea>
-        <div class="passage small" id="yourtext"></div>
+        <p class="caption">
+          Type anything for live rules-based pitch in the chosen language, or paste your own <code>Token[]</code> to
+          preview measured / AI melody.
+        </p>
+        <textarea id="your-text" rows="2" spellcheck="false"></textarea>
+        <div class="specimen">
+          <div class="passage small" id="yourtext"></div>
+        </div>
 
         <details class="tokens-details">
-          <summary>Paste external tokens JSON (Token[])</summary>
+          <summary>Paste external tokens (Token[])</summary>
           <p class="caption">
-            An array of <code>{ text, pitch: [onset, offset], trailing }</code>. Valid JSON renders below; the language
-            setting is ignored for this path.
+            An array of <code>{ text, pitch: [onset, offset], trailing }</code>. Valid JSON renders below; language is
+            ignored on this path.
           </p>
           <textarea id="tokens-json" rows="6" spellcheck="false"></textarea>
           <p class="err" id="tokens-err"></p>
-          <div class="passage small" id="tokenstext"></div>
+          <div class="specimen">
+            <div class="passage small" id="tokenstext"></div>
+          </div>
         </details>
       </section>
 
       <footer>
-        <p>prosody-mask · MIT · zero runtime dependencies</p>
+        <span>prosody-mask</span>
+        <span class="dot">·</span>
+        <span>MIT</span>
+        <span class="dot">·</span>
+        <span>zero runtime dependencies</span>
       </footer>
     </div>
 

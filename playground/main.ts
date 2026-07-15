@@ -33,13 +33,23 @@ let tokensMask: MaskHandle | null = null
 
 // --- style <-> controls -----------------------------------------------------
 
+/** Paint the filled portion of a range slider (webkit reads `--fill`). */
+function setFill(input: HTMLInputElement): void {
+  const min = Number(input.min || '0')
+  const max = Number(input.max || '100')
+  const pct = max > min ? ((Number(input.value) - min) / (max - min)) * 100 : 0
+  input.style.setProperty('--fill', `${pct}%`)
+}
+
 function syncControls(): void {
-  ;($('c-color') as HTMLInputElement).value = style.color
+  const color = $('c-color') as HTMLInputElement
+  color.value = style.color
+  $('c-color-hex').textContent = style.color.toUpperCase()
   for (const { key, digits } of NUM_CONTROLS) {
     const input = $(`c-${key}`) as HTMLInputElement
-    const val = $(`v-${key}`)
     input.value = String(style[key])
-    val.textContent = Number(style[key]).toFixed(digits)
+    $(`v-${key}`).textContent = Number(style[key]).toFixed(digits)
+    setFill(input)
   }
 }
 
@@ -83,6 +93,7 @@ function renderPresets(): void {
 
 ;($('c-color') as HTMLInputElement).addEventListener('input', (e) => {
   style.color = (e.target as HTMLInputElement).value
+  $('c-color-hex').textContent = style.color.toUpperCase()
   applyStyle()
 })
 
@@ -91,6 +102,7 @@ for (const { key, digits } of NUM_CONTROLS) {
   input.addEventListener('input', () => {
     ;(style as unknown as Record<string, number | string>)[key] = Number(input.value)
     $(`v-${key}`).textContent = Number(input.value).toFixed(digits)
+    setFill(input)
     applyStyle()
   })
 }
@@ -131,8 +143,96 @@ function updateYourText(): void {
 }
 
 yourTextEl.addEventListener('input', updateYourText)
-;($('lang') as HTMLSelectElement).addEventListener('change', (e) => {
-  lang = (e.target as HTMLSelectElement).value
+
+/** Wire the custom language dropdown (button + listbox, keyboard accessible). */
+function initSelect(onChange: (value: string) => void): void {
+  const root = $('lang-select')
+  const trigger = $('lang-trigger')
+  const menu = $('lang-menu')
+  const label = $('lang-label')
+  const options = Array.from(menu.querySelectorAll<HTMLElement>('.select-option'))
+  let highlight = Math.max(
+    0,
+    options.findIndex((o) => o.classList.contains('is-selected')),
+  )
+
+  const isOpen = (): boolean => root.classList.contains('open')
+  const paint = (): void => options.forEach((o, i) => o.classList.toggle('is-active', isOpen() && i === highlight))
+  const open = (): void => {
+    root.classList.add('open')
+    trigger.setAttribute('aria-expanded', 'true')
+    highlight = Math.max(
+      0,
+      options.findIndex((o) => o.classList.contains('is-selected')),
+    )
+    paint()
+  }
+  const close = (): void => {
+    root.classList.remove('open')
+    trigger.setAttribute('aria-expanded', 'false')
+    paint()
+  }
+  const choose = (opt: HTMLElement): void => {
+    options.forEach((o) => {
+      const on = o === opt
+      o.classList.toggle('is-selected', on)
+      o.setAttribute('aria-selected', String(on))
+    })
+    label.textContent = opt.textContent
+    onChange(opt.dataset.value ?? 'en')
+  }
+
+  trigger.addEventListener('click', () => (isOpen() ? close() : open()))
+  options.forEach((opt) => {
+    opt.addEventListener('click', () => {
+      choose(opt)
+      close()
+      trigger.focus()
+    })
+    opt.addEventListener('mouseenter', () => {
+      highlight = options.indexOf(opt)
+      paint()
+    })
+  })
+  document.addEventListener('click', (e) => {
+    if (!root.contains(e.target as Node)) close()
+  })
+  trigger.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault()
+        if (!isOpen()) open()
+        else {
+          highlight = Math.min(options.length - 1, highlight + 1)
+          paint()
+        }
+        break
+      case 'ArrowUp':
+        e.preventDefault()
+        if (!isOpen()) open()
+        else {
+          highlight = Math.max(0, highlight - 1)
+          paint()
+        }
+        break
+      case 'Enter':
+      case ' ':
+        e.preventDefault()
+        if (!isOpen()) open()
+        else {
+          choose(options[highlight])
+          close()
+        }
+        break
+      case 'Escape':
+        close()
+        break
+    }
+  })
+}
+
+initSelect((value) => {
+  lang = value
   updateYourText()
 })
 
