@@ -183,18 +183,12 @@ code {
   line-height: 1.85;
 }
 
-/* karaoke highlight: the word currently spoken in the audio */
+/* karaoke highlight: the word currently spoken turns the bright accent colour */
 #demo span {
-  border-radius: 5px;
-  transition:
-    background 0.12s ease,
-    color 0.12s ease,
-    box-shadow 0.12s ease;
+  transition: color 0.1s ease;
 }
 #demo span.speaking {
-  background: rgba(14, 163, 148, 0.18);
-  color: var(--accent-strong);
-  box-shadow: 0 0 0 3px rgba(14, 163, 148, 0.18);
+  color: var(--accent);
 }
 
 /* ---------- audio player ---------- */

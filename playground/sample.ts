@@ -12,7 +12,11 @@ import type { Token } from 'prosody-mask'
 export const sampleText =
   'The tide came in slowly, without a single sound. Did you notice how the evening light shifted over the water? For a moment everything felt calm, patient, and almost unreal.'
 
-/** Pitch measured from the audio: `[onset, offset]` per word, 0..1. */
+/**
+ * Pitch measured from the audio (`[onset, offset]` per word, 0..1). Two words
+ * also carry an explicit `pause`, marking a real held pause the speaker makes
+ * where the text has no punctuation (after "moment", before "unreal").
+ */
 export const sampleAiTokens: Token[] = [
   { text: 'The', pitch: [0.54, 0.54], trailing: '' },
   { text: 'tide', pitch: [0.65, 1.0], trailing: '' },
@@ -36,13 +40,13 @@ export const sampleAiTokens: Token[] = [
   { text: 'water', pitch: [0.03, 0.96], trailing: '?' },
   { text: 'For', pitch: [0.6, 0.55], trailing: '' },
   { text: 'a', pitch: [0.46, 0.31], trailing: '' },
-  { text: 'moment', pitch: [0.38, 1.0], trailing: '' },
+  { text: 'moment', pitch: [0.38, 1.0], trailing: '', pause: 'soft' },
   { text: 'everything', pitch: [0.45, 0.84], trailing: '' },
   { text: 'felt', pitch: [0.74, 0.45], trailing: '' },
   { text: 'calm', pitch: [0.26, 0.66], trailing: ',' },
   { text: 'patient', pitch: [0.31, 0.88], trailing: ',' },
   { text: 'and', pitch: [0.3, 0.27], trailing: '' },
-  { text: 'almost', pitch: [0.28, 0.43], trailing: '' },
+  { text: 'almost', pitch: [0.28, 0.43], trailing: '', pause: 'soft' },
   { text: 'unreal', pitch: [0.34, 0.25], trailing: '.' },
 ]
 
@@ -74,12 +78,12 @@ export const sampleWordTimings: Array<{ start: number; end: number }> = [
   { start: 5.84, end: 6.48 },
   { start: 6.64, end: 6.88 },
   { start: 6.88, end: 7.04 },
-  { start: 7.04, end: 7.44 },
-  { start: 7.44, end: 7.92 },
+  { start: 7.04, end: 7.25 },
+  { start: 7.46, end: 7.92 },
   { start: 7.92, end: 8.24 },
   { start: 8.24, end: 8.88 },
   { start: 8.88, end: 9.52 },
   { start: 9.52, end: 9.68 },
-  { start: 9.68, end: 10.16 },
-  { start: 10.16, end: 10.8 },
+  { start: 9.68, end: 9.88 },
+  { start: 10.26, end: 10.8 },
 ]
