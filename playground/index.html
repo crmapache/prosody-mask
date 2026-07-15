@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>prosody-mask - playground</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -24,7 +25,7 @@
               stroke-linecap="round" />
           </svg>
         </div>
-        <h1>prosody&#8202;<span class="slash">/</span>&#8202;mask</h1>
+        <h1>prosody-mask</h1>
         <p class="thesis">
           A translucent mask that traces the melody of a sentence - one soft hill per breath group, rising and falling
           with the voice and settling to the floor at every real pause. Tune the look, copy it as a preset. The pitch
@@ -89,63 +90,6 @@
                 <pre id="out-json"></pre>
               </div>
             </div>
-          </section>
-
-          <section class="panel">
-            <div class="section-head">
-              <h2>Your text</h2>
-              <div class="lang-field">
-                <span class="lf-label" id="lang-lbl">Language</span>
-                <div class="select" id="lang-select">
-                  <button
-                    type="button"
-                    class="select-trigger"
-                    id="lang-trigger"
-                    aria-haspopup="listbox"
-                    aria-expanded="false"
-                    aria-labelledby="lang-lbl lang-label">
-                    <span id="lang-label">English</span>
-                    <svg class="chev" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                      <path
-                        d="M4 6l4 4 4-4"
-                        stroke="currentColor"
-                        stroke-width="1.6"
-                        stroke-linecap="round"
-                        stroke-linejoin="round" />
-                    </svg>
-                  </button>
-                  <ul class="select-menu" id="lang-menu" role="listbox" aria-labelledby="lang-lbl">
-                    <li class="select-option is-selected" role="option" data-value="en" aria-selected="true">
-                      English
-                    </li>
-                    <li class="select-option" role="option" data-value="es" aria-selected="false">Español</li>
-                    <li class="select-option" role="option" data-value="pt" aria-selected="false">Português</li>
-                    <li class="select-option" role="option" data-value="ru" aria-selected="false">Русский</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <p class="caption">
-              Type anything for live rules-based pitch in the chosen language, or paste your own <code>Token[]</code> to
-              preview measured / AI melody.
-            </p>
-            <textarea id="your-text" rows="2" spellcheck="false"></textarea>
-            <div class="specimen">
-              <div class="passage small" id="yourtext"></div>
-            </div>
-
-            <details class="tokens-details">
-              <summary>Paste external tokens (Token[])</summary>
-              <p class="caption">
-                An array of <code>{ text, pitch: [onset, offset], trailing }</code>. Valid JSON renders below; language
-                is ignored on this path.
-              </p>
-              <textarea id="tokens-json" rows="6" spellcheck="false"></textarea>
-              <p class="err" id="tokens-err"></p>
-              <div class="specimen">
-                <div class="passage small" id="tokenstext"></div>
-              </div>
-            </details>
           </section>
 
           <section class="panel">
