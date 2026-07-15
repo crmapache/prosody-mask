@@ -1,6 +1,6 @@
 export { createMask } from './renderer'
 export { computeTokens, getProfile, supportedLanguages } from './rules'
-export { groupTokens, pauseAfter } from './grouping'
+export { groupTokens, pauseAfter, pauseOf } from './grouping'
 export { tokenise, classifyPunct } from './tokenise'
 export { smoothTop } from './smoothing'
 export { defaultStyle } from './style'

@@ -16,6 +16,19 @@ export function pauseAfter(trailing: string | undefined): PauseStrength {
   return 'none'
 }
 
+const RANK: Record<PauseStrength, number> = { none: 0, soft: 1, hard: 2 }
+
+/**
+ * Effective pause after a token: the stronger of its punctuation-derived pause
+ * and its explicit `pause` marker. This lets measured/AI producers introduce a
+ * real pause where the text carries no punctuation.
+ */
+export function pauseOf(token: Token): PauseStrength {
+  const punct = pauseAfter(token.trailing)
+  const explicit = token.pause ?? 'none'
+  return RANK[explicit] > RANK[punct] ? explicit : punct
+}
+
 /**
  * Group tokens into breath groups by scanning `trailing`. This is the one
  * deterministic grouping function, so rules-produced and externally-supplied
@@ -26,7 +39,7 @@ export function groupTokens(tokens: Token[]): BreathGroup[] {
   let current: Token[] = []
   for (const tok of tokens) {
     current.push(tok)
-    const pause = pauseAfter(tok.trailing)
+    const pause = pauseOf(tok)
     if (pause !== 'none') {
       groups.push({ tokens: current, pause })
       current = []

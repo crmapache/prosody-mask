@@ -90,8 +90,13 @@ interface Token {
   text: string // the word as displayed, e.g. "decide"
   pitch: [number, number] // [onset, offset], each 0..1
   trailing?: string // "," "." "?" "!" ";" ":" or ""
+  pause?: 'soft' | 'hard' // optional explicit pause after this word (no punctuation needed)
 }
 ```
+
+`pause` lets measured/AI producers mark a real pause where the text has no
+comma or full stop (a held, dramatic pause). Grouping uses the stronger of
+`pause` and the `trailing` punctuation, so the mask breaks there too.
 
 Grouping is one deterministic function, so rules-produced and externally-supplied
 tokens behave identically. Producers only fill `pitch` and `trailing` - they never
@@ -111,15 +116,15 @@ createMask(el, { text }, { ...defaultStyle, color: '#3b6ea5', fillOpacity: 0.2 }
 
 | Field           | Type   | Default   | Meaning                                                        |
 | --------------- | ------ | --------- | -------------------------------------------------------------- |
-| `color`         | string | `#C6851C` | Shared colour for fill + both lines (`#rgb` or `#rrggbb`).     |
+| `color`         | string | `#1C92C4` | Shared colour for fill + both lines (`#rgb` or `#rrggbb`).     |
 | `fillOpacity`   | number | `0.16`    | Fill opacity, `0..1` (`0` hides the fill).                     |
 | `topWidth`      | number | `1.5`     | Top edge line width in px (`0` hides it).                      |
 | `topOpacity`    | number | `0.45`    | Top edge line opacity, `0..1`.                                 |
 | `bottomWidth`   | number | `2.5`     | Baseline width in px (`0` hides it).                           |
 | `bottomOpacity` | number | `0.85`    | Baseline opacity, `0..1`.                                      |
 | `floorLift`     | number | `0.38`    | Minimum fill height so low pitch never collapses to the floor. |
-| `softGap`       | number | `1`       | Soft-pause gap (comma / `;` / `:`) in spaces (× the font's space width). |
-| `hardGap`       | number | `2`       | Hard-pause gap (`.` / `?` / `!`) in spaces (× the font's space width).   |
+| `softGap`       | number | `2`       | Soft-pause gap (comma / `;` / `:`) in spaces (× the font's space width). |
+| `hardGap`       | number | `4`       | Hard-pause gap (`.` / `?` / `!`) in spaces (× the font's space width).   |
 | `smoothing`     | number | `1`       | Catmull-Rom tension; `1` = reference, `0` = straight lines.    |
 
 Tune a look in the [playground](#playground) and copy it as a preset.

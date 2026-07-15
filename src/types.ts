@@ -23,6 +23,13 @@ export interface Token {
   pitch: PitchPair
   /** Trailing punctuation, one of `, . ? ! ; :` or `""`. Drives pause/grouping. */
   trailing?: string
+  /**
+   * An explicit prosodic pause after this word, independent of punctuation.
+   * Lets measured/AI producers mark a real pause where the text has no comma or
+   * full stop (e.g. a held, dramatic pause a speaker actually makes). Grouping
+   * uses the stronger of this and the `trailing` punctuation.
+   */
+  pause?: 'soft' | 'hard'
 }
 
 /** Pause that follows a breath group. */
