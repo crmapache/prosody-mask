@@ -334,6 +334,54 @@ updateTokens()
 applyTextSize()
 wireCopy('copy-ts', () => tsSnippet(style))
 wireCopy('copy-json', () => JSON.stringify(orderedStyle(style), null, 2))
+initAudio()
+
+/** Wire the custom audio player under the demo passage (Deepgram TTS render). */
+function initAudio(): void {
+  const audio = $('audio') as HTMLAudioElement
+  const wrap = $('audio-player')
+  const btn = $('audio-btn')
+  const fill = $('audio-fill')
+  const time = $('audio-time')
+  const track = $('audio-track')
+
+  const fmt = (s: number): string => {
+    if (!Number.isFinite(s)) return '0:00'
+    const m = Math.floor(s / 60)
+    const sec = Math.floor(s % 60)
+    return `${m}:${String(sec).padStart(2, '0')}`
+  }
+
+  btn.addEventListener('click', () => {
+    if (audio.paused) void audio.play()
+    else audio.pause()
+  })
+  audio.addEventListener('play', () => {
+    wrap.classList.add('is-playing')
+    btn.setAttribute('aria-label', 'Pause')
+  })
+  audio.addEventListener('pause', () => {
+    wrap.classList.remove('is-playing')
+    btn.setAttribute('aria-label', 'Play')
+  })
+  audio.addEventListener('loadedmetadata', () => {
+    time.textContent = fmt(audio.duration)
+  })
+  audio.addEventListener('timeupdate', () => {
+    const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0
+    fill.style.width = `${pct}%`
+    time.textContent = fmt(audio.currentTime)
+  })
+  audio.addEventListener('ended', () => {
+    fill.style.width = '0%'
+    time.textContent = fmt(audio.duration)
+  })
+  track.addEventListener('click', (e) => {
+    const rect = track.getBoundingClientRect()
+    const ratio = Math.max(0, Math.min(1, ((e as MouseEvent).clientX - rect.left) / rect.width))
+    if (audio.duration) audio.currentTime = ratio * audio.duration
+  })
+}
 
 function wireCopy(id: string, get: () => string): void {
   const btn = $(id)

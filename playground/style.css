@@ -183,6 +183,96 @@ code {
   line-height: 1.85;
 }
 
+/* ---------- audio player ---------- */
+
+.audio {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+  padding: 12px 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow-card);
+}
+.audio-btn {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--accent);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    transform 0.1s;
+}
+.audio-btn:hover {
+  background: var(--accent-strong);
+}
+.audio-btn:active {
+  transform: scale(0.94);
+}
+.audio-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  grid-area: 1 / 1;
+}
+.audio-btn .i-pause {
+  display: none;
+}
+.audio.is-playing .audio-btn .i-play {
+  display: none;
+}
+.audio.is-playing .audio-btn .i-pause {
+  display: block;
+}
+.audio-body {
+  flex: 1;
+  min-width: 0;
+}
+.audio-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 9px;
+}
+.audio-label {
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 500;
+}
+.audio-sub {
+  font-size: 11px;
+  color: var(--faint);
+  font-weight: 400;
+  margin-left: 6px;
+}
+.audio-time {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  flex: none;
+}
+.audio-track {
+  height: 5px;
+  border-radius: 999px;
+  background: var(--line-2);
+  cursor: pointer;
+}
+.audio-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  border-radius: 999px;
+}
+
 /* ---------- segmented toggle ---------- */
 
 .seg {

@@ -48,6 +48,20 @@
         <div class="specimen">
           <div class="passage" id="demo"></div>
         </div>
+        <div class="audio" id="audio-player">
+          <button class="audio-btn" id="audio-btn" type="button" aria-label="Play">
+            <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+            <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z" /></svg>
+          </button>
+          <div class="audio-body">
+            <div class="audio-row">
+              <span class="audio-label">Hear it read aloud <span class="audio-sub">Deepgram Aura-2 · female</span></span>
+              <span class="audio-time" id="audio-time">0:00</span>
+            </div>
+            <div class="audio-track" id="audio-track"><div class="audio-fill" id="audio-fill"></div></div>
+          </div>
+          <audio id="audio" src="/demo-voice.mp3" preload="metadata"></audio>
+        </div>
       </section>
 
       <section class="panel">
