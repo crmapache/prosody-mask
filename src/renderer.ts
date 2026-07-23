@@ -43,7 +43,10 @@ interface WordEl {
   band: number
 }
 
-/** A gap span between two breath groups, remembered so its width can restyle. */
+/**
+ * The last word of a breath group that a pause follows, remembered so its
+ * trailing margin (the pause's width) can restyle.
+ */
 interface GapEl {
   el: HTMLElement
   hard: boolean
@@ -99,6 +102,7 @@ export function createMask(container: HTMLElement, input: MaskInput, style?: Par
 
     groups = groupTokens(resolveTokens(current))
     groups.forEach((group, gi) => {
+      const lastTi = group.tokens.length - 1
       group.tokens.forEach((tok, ti) => {
         const span = document.createElement('span')
         span.textContent = tok.text + (tok.trailing ?? '')
@@ -106,16 +110,20 @@ export function createMask(container: HTMLElement, input: MaskInput, style?: Par
         span.style.zIndex = '1'
         container.appendChild(span)
         words.push({ el: span, onset: tok.pitch[0], offset: tok.pitch[1], band: gi })
-        if (ti < group.tokens.length - 1) container.appendChild(document.createTextNode(' '))
+        if (ti < lastTi) {
+          container.appendChild(document.createTextNode(' '))
+        } else if (gi < groups.length - 1) {
+          // The pause is a margin on the word that owns it, not a standalone
+          // box: a standalone inline-block has no whitespace around it to
+          // collapse, so the browser is free to wrap it whole onto the next
+          // line, stranding an invisible indent in front of the next word.
+          // A margin lives inside this span's own border box, so on a wrap
+          // it stays behind with the word - and getBoundingClientRect()
+          // never counts margin, so it can't bias the mask's line detection.
+          gaps.push({ el: span, hard: group.pause === 'hard' })
+          container.appendChild(document.createTextNode(' '))
+        }
       })
-      if (gi < groups.length - 1) {
-        const gap = document.createElement('span')
-        const hard = group.pause === 'hard'
-        gap.setAttribute('aria-hidden', 'true')
-        gap.style.display = 'inline-block'
-        container.appendChild(gap)
-        gaps.push({ el: gap, hard })
-      }
     })
     applyGapWidths()
   }
@@ -138,7 +146,13 @@ export function createMask(container: HTMLElement, input: MaskInput, style?: Par
   function applyGapWidths(): void {
     if (!gaps.length) return
     const sw = spaceWidth()
-    for (const g of gaps) g.el.style.width = `${((g.hard ? st.hardGap : st.softGap) * sw).toFixed(2)}px`
+    for (const g of gaps) {
+      const spaces = g.hard ? st.hardGap : st.softGap
+      // One space of the configured width is the literal ' ' that follows
+      // this word in the DOM (kept as a normal, collapsible break point);
+      // the rest is extra margin stacked onto this word's own box.
+      g.el.style.marginRight = `${(Math.max(0, spaces - 1) * sw).toFixed(2)}px`
+    }
   }
 
   function draw(): void {

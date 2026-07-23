@@ -245,7 +245,9 @@ The renderer recomputes automatically on window resize, container resize
   selection or clicks.
 - The overlay grows only inside the text's own height (from the letter floor to
   at most the letter tops), so line spacing is identical to plain text.
-- Gap spans between breath groups are `aria-hidden` spacing only.
+- Pauses between breath groups are plain margin on the preceding word, not a
+  standalone element, so they can never wrap onto the next line on their own
+  and strand an indent in front of it.
 
 ## Adding a language
 

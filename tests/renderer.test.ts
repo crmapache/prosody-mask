@@ -32,15 +32,20 @@ describe('createMask (DOM structure)', () => {
     expect(wordSpans.map((s) => s.textContent)).toEqual(['The', 'system', 'works', 'well.'])
   })
 
-  it('inserts sized gap spans between breath groups', () => {
+  it('sizes a pause as margin on the last word of the breath group, not a standalone box', () => {
     const el = mount()
     handle = createMask(el, { text: 'One, two.' })
-    const gaps = Array.from(el.querySelectorAll('span')).filter((s) => s.getAttribute('aria-hidden') === 'true')
-    expect(gaps).toHaveLength(1)
-    // Gap width is measured in spaces (× the font's space width), so it is a
-    // positive px value proportional to font size, not a fixed number.
-    expect(gaps[0].style.width).toMatch(/px$/)
-    expect(parseFloat(gaps[0].style.width)).toBeGreaterThan(0)
+    // No standalone gap element: a separate inline-block has no whitespace
+    // around it to collapse, so it can wrap onto the next line on its own and
+    // strand an invisible indent in front of the following word.
+    expect(el.querySelectorAll('span[aria-hidden="true"]')).toHaveLength(0)
+    const wordSpans = Array.from(el.querySelectorAll('span')).filter((s) => s.getAttribute('aria-hidden') !== 'true')
+    expect(wordSpans.map((s) => s.textContent)).toEqual(['One,', 'two.'])
+    // The pause lives as margin on the word before it, proportional to font
+    // size (× the font's space width), not a fixed number.
+    expect(wordSpans[0].style.marginRight).toMatch(/px$/)
+    expect(parseFloat(wordSpans[0].style.marginRight)).toBeGreaterThan(0)
+    expect(wordSpans[1].style.marginRight).toBe('')
   })
 
   it('uses supplied tokens verbatim (bring your own points)', () => {
